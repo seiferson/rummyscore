@@ -14,7 +14,7 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/", "api/v1/check").permitAll()
+                        .requestMatchers("/", "/api/v1/check").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(withDefaults());;
