@@ -33,6 +33,11 @@ public class AppRestAPI {
 
     @GetMapping("/check")
     public ResponseEntity<String> check(@AuthenticationPrincipal OAuth2User principal) {
-        return ResponseEntity.ok(principal.getAttribute("name"));
+        if(principal != null) {
+            return ResponseEntity.ok(principal.getAttribute("email"));
+        } else {
+            return ResponseEntity.ok("anon");
+        }
+
     }
 }
