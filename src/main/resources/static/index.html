@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <link rel="stylesheet" type="text/css" href="/css/semantic.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.4/dist/semantic.min.css">
   <link rel="icon" type="image/png" href="#">
   <title>rummyscore</title>
 </head>
@@ -117,7 +117,7 @@
         if (!response.ok) {
             throw new Error('Network response was not ok: ' + response.statusText);
         }
-        return response.json();
+        return response;
     })
     .then(data => {
         console.log(data);
