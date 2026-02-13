@@ -13,8 +13,8 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http
-                .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/").permitAll()
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers("/", "api/v1/check").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(withDefaults());;
