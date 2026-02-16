@@ -13,6 +13,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.util.Optional;
 
+import static com.seifersonlabs.rummyscore.util.Constants.AVATAR_ATTRS;
+import static com.seifersonlabs.rummyscore.util.Constants.DICEBEAR_URL;
+
 @RestController
 @RequestMapping("/api/v1")
 public class AppRestAPI {
@@ -54,13 +57,12 @@ public class AppRestAPI {
                 Player newPlayer = new Player();
                 newPlayer.setEmail(principal.getAttribute("email"));
                 newPlayer.setNickname(principal.getAttribute("email").toString().substring(0, 5));
+                newPlayer.setAvatar(DICEBEAR_URL + AVATAR_ATTRS + newPlayer.getNickname());
                 newPlayer = playerRepo.save(newPlayer);
                 return ResponseEntity.ok(newPlayer);
             }
         } else {
-            Player anon = new Player();
-            anon.setNickname("anon");
-            return ResponseEntity.ok(anon);
+            return ResponseEntity.notFound().build();
         }
     }
 }

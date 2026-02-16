@@ -1,5 +1,6 @@
 package com.seifersonlabs.rummyscore.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.UUID;
@@ -16,8 +17,11 @@ public class Player {
     @Column(length = 5, unique = true, nullable = false)
     private String nickname;
 
+    @JsonIgnore
     @Column(unique = true, nullable = false)
     private String email;
+
+    private String avatar;
 
     public UUID getId() {
         return id;
@@ -41,5 +45,13 @@ public class Player {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }
