@@ -13,8 +13,11 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(length = 5)
+    @Column(length = 5, unique = true, nullable = false)
     private String nickname;
+
+    @Column(unique = true, nullable = false)
+    private String email;
 
     public UUID getId() {
         return id;
@@ -30,5 +33,13 @@ public class Player {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

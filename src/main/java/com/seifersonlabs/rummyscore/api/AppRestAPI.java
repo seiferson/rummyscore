@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/v1")
 public class AppRestAPI {
@@ -39,5 +41,26 @@ public class AppRestAPI {
             return ResponseEntity.ok("anon");
         }
 
+    }
+
+
+    @GetMapping("/authx/getuserinfo")
+    public ResponseEntity<Player> getUserInfo(@AuthenticationPrincipal OAuth2User principal) {
+        if(principal != null) {
+            Optional<Player> playerInfo = playerRepo.findByEmail(principal.getAttribute("email"));
+            if(playerInfo.isPresent()) {
+                return ResponseEntity.ok(playerInfo.get());
+            } else {
+                Player newPlayer = new Player();
+                newPlayer.setEmail(principal.getAttribute("email"));
+                newPlayer.setNickname(principal.getAttribute("email").toString().substring(0, 5));
+                newPlayer = playerRepo.save(newPlayer);
+                return ResponseEntity.ok(newPlayer);
+            }
+        } else {
+            Player anon = new Player();
+            anon.setNickname("anon");
+            return ResponseEntity.ok(anon);
+        }
     }
 }
