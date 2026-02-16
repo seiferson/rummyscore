@@ -1,14 +1,17 @@
 package com.seifersonlabs.rummyscore.api;
 
+import com.seifersonlabs.rummyscore.model.entity.Match;
 import com.seifersonlabs.rummyscore.model.entity.Player;
+import com.seifersonlabs.rummyscore.model.repo.MatchRepo;
 import com.seifersonlabs.rummyscore.model.repo.PlayerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.util.Optional;
@@ -21,31 +24,18 @@ import static com.seifersonlabs.rummyscore.util.Constants.DICEBEAR_URL;
 public class AppRestAPI {
 
     @Autowired
-    PlayerRepo playerRepo;
+    private PlayerRepo playerRepo;
 
-    @GetMapping("/test/{test}")
-    public ResponseEntity<String> test(@PathVariable String test) {
-        Player p = new Player();
-        p.setNickname(test);
-        playerRepo.save(p);
-        return ResponseEntity.ok(test);
+    @Autowired
+    private MatchRepo matchRepo;
+
+    @GetMapping("/matches")
+    public ResponseEntity<Page<Match>> getMatches(@AuthenticationPrincipal OAuth2User principal, @RequestParam int page) {
+        Pageable pageable = PageRequest.of(page, 5, Sort.by("startDate"));
+        Page<Match> matches = matchRepo.findAll(pageable);
+
+        return ResponseEntity.ok(matches);
     }
-
-    @GetMapping("/players")
-    public ResponseEntity<Iterable<Player>> getPlayers() {
-        return ResponseEntity.ok(playerRepo.findAll());
-    }
-
-    @GetMapping("/check")
-    public ResponseEntity<String> check(@AuthenticationPrincipal OAuth2User principal) {
-        if(principal != null) {
-            return ResponseEntity.ok(principal.getAttribute("email"));
-        } else {
-            return ResponseEntity.ok("anon");
-        }
-
-    }
-
 
     @GetMapping("/authx/getuserinfo")
     public ResponseEntity<Player> getUserInfo(@AuthenticationPrincipal OAuth2User principal) {

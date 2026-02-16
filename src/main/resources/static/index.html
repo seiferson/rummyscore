@@ -19,7 +19,7 @@
       <a class="ui header" href="#"><i class="mountain icon"></i></a>
     </div>
     <div class="right menu">
-      <div class="ui item" id="menu-avatar-action">
+      <div class="ui item" id="menu-avatar-elem">
         <a href="/oauth2/authorization/google"><i class="google icon"></i> login</a>
       </div>
     </div>
@@ -39,32 +39,43 @@
     <br />
     <br />
     <br />
-    <div class="ui stackable grid">
+    <div class="ui stackable reversed mobile grid">
       <div class="row">
-        <div class="five wide column">
-          <h4 class="ui center aligned icon header">
-            <i class="circular trophy icon"></i>
-            <span class="content">champion</span>
-          </h4>
-          <div class="ui centered card">
-            <div class="image">
-              <img src="https://api.dicebear.com/9.x/notionists/svg?seed=rampage&scale=150&backgroundColor=c0aede&body=variant23&hair=variant42&lips=variant27" alt="user avatar">
-            </div>
-            <div class="content">
-              <div class="header">@sfrsn</div>
-              <div class="meta">
-                <span class="category" title="games played"><i class="dice icon"></i> 15</span>
-                <span class="category" title="games won"><i class="trophy icon"></i> 5</span>
-                <span class="category" title="tournaments won"><i class="medal icon"></i> 1</span>
-                <span class="category" title="best game score"><i class="chartline icon"></i> 140</span>
-                <span class="category" title="best tournament score"><i class="chart bar icon"></i> 1000</span>
-              </div>
-            </div>
-          </div>
-        </div>
         <div class="eleven wide column">
+          <h4 class="ui center aligned icon header">
+            <i class="circular dice four icon"></i>
+            <span class="content">latest activity</span>
+          </h4>
           <div class="ui segment">
-            <div class="ui feed">
+            <div class="ui feed" id="feed-elem">
+              <div class="event">
+                <div class="label">
+                  <img src="https://api.dicebear.com/9.x/notionists-neutral/svg?seed=doom" alt="user avatar">
+                </div>
+                <div class="content">
+                  <div class="date"><div class="ui placeholder"><div class="very short line"></div></div></div>
+                  <div class="summary"><div class="ui placeholder"><div class="medium line"></div></div></div>
+                </div>
+              </div>
+              <div class="event">
+                <div class="label">
+                  <img src="https://api.dicebear.com/9.x/notionists-neutral/svg?seed=doom" alt="user avatar">
+                </div>
+                <div class="content">
+                  <div class="date"><div class="ui placeholder"><div class="very short line"></div></div></div>
+                  <div class="summary"><div class="ui placeholder"><div class="medium line"></div></div></div>
+                </div>
+              </div>
+              <div class="event">
+                <div class="label">
+                  <img src="https://api.dicebear.com/9.x/notionists-neutral/svg?seed=doom" alt="user avatar">
+                </div>
+                <div class="content">
+                  <div class="date"><div class="ui placeholder"><div class="very short line"></div></div></div>
+                  <div class="summary"><div class="ui placeholder"><div class="medium line"></div></div></div>
+                </div>
+              </div>
+              <!--
               <div class="event">
                 <div class="label">
                   <img src="https://api.dicebear.com/9.x/notionists/svg?seed=rampage&scale=150&backgroundColor=c0aede&body=variant23&hair=variant42&lips=variant27" alt="user avatar">
@@ -93,6 +104,38 @@
                   </div>
                 </div>
               </div>
+
+
+              <div class="ui centered card">
+            <div class="image">
+              <img src="https://api.dicebear.com/9.x/notionists-neutral/svg?seed=doom" alt="user avatar">
+            </div>
+            <div class="content">
+              <div class="header">@sfrsn</div>
+              <div class="meta">
+                <span class="category" title="games played"><i class="dice icon"></i> 15</span>
+                <span class="category" title="games won"><i class="trophy icon"></i> 5</span>
+                <span class="category" title="tournaments won"><i class="medal icon"></i> 1</span>
+                <span class="category" title="best game score"><i class="chartline icon"></i> 140</span>
+                <span class="category" title="best tournament score"><i class="chart bar icon"></i> 1000</span>
+              </div>
+            </div>
+          </div>
+              -->
+            </div>
+          </div>
+        </div>
+        <div class="five wide column">
+          <h4 class="ui center aligned icon header">
+            <i class="circular trophy icon"></i>
+            <span class="content">leader</span>
+          </h4>
+          <div class="ui centered card">
+            <div class="image">
+              <img src="https://api.dicebear.com/9.x/notionists-neutral/svg?seed=doom" alt="user avatar">
+            </div>
+            <div class="content">
+              <div class="header"><div class="ui placeholder"><div class="short line"></div></div></div>
             </div>
           </div>
         </div>
@@ -125,14 +168,26 @@
     })
     .then(data => {
         console.log('[INFO] rummyscore::index.html::fetch::/api/v1/authx/getuserinfo ' + data);
-        document.getElementById('menu-avatar-action').innerHTML =
+        document.getElementById('menu-avatar-elem').innerHTML =
             "<a href=\"/profile.html\"><img class=\"ui avatar image\" src=" + data.avatar + "/>@" + data.nickname + "</a>";
     })
     .catch(error => {
         console.error(error);
     });
 
-
+    fetch('/api/v1/matches?page=0')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('[ERROR] rummyscore::index.html::fetch::/api/v1/matches ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('[INFO] rummyscore::index.html::fetch::/api/v1/matches ' + data);
+        })
+        .catch(error => {
+            console.error(error);
+        });
 </script>
 </body>
 </html>
