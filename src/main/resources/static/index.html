@@ -77,19 +77,7 @@
                 </div>
               </div>
               <!--
-              <div class="event">
-                <div class="label">
-                  <img src="https://api.dicebear.com/9.x/notionists/svg?seed=rampage&scale=150&backgroundColor=c0aede&body=variant23&hair=variant42&lips=variant27" alt="user avatar">
-                </div>
-                <div class="content">
-                  <div class="date">Feb 11 2026</div>
-                  <div class="summary"><a class="user">@sfrsn</a> is hosting <a>#add73</a></div>
-                  <div class="meta">
-                    <span><i class="user icon"></i> 4</span>
-                    <span><i class="medal icon"></i> 2026 Championship</span>
-                  </div>
-                </div>
-              </div>
+
               <div class="event">
                 <div class="label">
                   <img src="https://api.dicebear.com/9.x/notionists/svg?seed=rampage&scale=150&backgroundColor=c0aede&body=variant23&hair=variant42&lips=variant27" alt="user avatar">
@@ -168,51 +156,78 @@
       return response.json();
     })
     .then(data => {
-        console.log('[INFO] rummyscore::index.html::fetch::/api/v1/authx/getuserinfo ' + data);
+      console.log('[INFO] rummyscore::index.html::fetch::/api/v1/authx/getuserinfo ' + data);
 
-        document.getElementById('menu-avatar-elem').innerHTML =
-            "<a href=\"/profile.html\"><img class=\"ui avatar image\" src=" + data.avatar + "/>@" + data.nickname + "</a>";
+      document.getElementById('menu-avatar-elem').innerHTML =
+          "<a href=\"/profile.html\"><img class=\"ui avatar image\" src=" + data.avatar + "/>@" + data.nickname + "</a>";
 
-        document.getElementById("host-placeholder-elem").innerHTML =
-            "<button class=\"ui basic right floated icon button\" id=\"host-game-button\">"+
-            "<i class=\"plus icon\"></i>" +
-            "</button>";
+      document.getElementById("host-placeholder-elem").innerHTML =
+          "<button class=\"ui basic right floated icon button\" id=\"host-game-button\">"+
+          "<i class=\"plus icon\"></i>" +
+          "</button>";
 
-        document
-            .getElementById("host-game-button")
-            .addEventListener("click", function () {
-                fetch("/api/v1/matches", {method: "POST"})
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('[ERROR] rummyscore::index.html::fetch::/api/v1/matches::post ' + response.statusText);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('[INFO] rummyscore::index.html::fetch::/api/v1/matches::post ' + data);
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
+      document
+        .getElementById("host-game-button")
+        .addEventListener("click", function () {
+          fetch("/api/v1/matches", {method: "POST"})
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('[ERROR] rummyscore::index.html::fetch::/api/v1/matches::post ' + response.statusText);
+              }
+              return response.json();
+            })
+            .then(data => {
+              console.log('[INFO] rummyscore::index.html::fetch::/api/v1/matches::post ' + data);
+              refreshFeed();
+            })
+            .catch(error => {
+              console.error(error);
             });
-    })
-      .catch(error => {
-          console.error(error);
-      });
-
-  fetch('/api/v1/matches?page=0')
-      .then(response => {
-          if (!response.ok) {
-        throw new Error('[ERROR] rummyscore::index.html::fetch::/api/v1/matches::get ' + response.statusText);
-      }
-      return response.json();
-    })
-    .then(data => {
-      console.log('[INFO] rummyscore::index.html::fetch::/api/v1/matches::get ' + data);
+        });
     })
     .catch(error => {
       console.error(error);
     });
+
+  function refreshFeed() {
+    fetch('/api/v1/matches?page=0')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('[ERROR] rummyscore::index.html::fetch::/api/v1/matches::get ' + response.statusText);
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('[INFO] rummyscore::index.html::fetch::/api/v1/matches::get ' + data);
+
+        let feedData = "";
+        data.content.forEach( function(event) {
+          feedData +=
+              "<div class=\"event\">" +
+              "<div class=\"label\">" +
+              "<img src=" + event.host.avatar +" alt=\"user avatar\">" +
+              "</div>" +
+              "<div class=\"content\">" +
+              "<div class=\"date\">" + event.startDate + "</div>" +
+              "<div class=\"summary\">" +
+              "<a class=\"user\">@" +event.host.nickname + "</a> is hosting <a>#"+ event.id.substring(0,5) +"</a>" +
+              "</div>" +
+              "<div class=\"meta\">" +
+              "<span><i class=\"user icon\"></i> ?</span>" +
+              "</div>" +
+              "</div>" +
+              "</div>"
+        });
+
+        document.getElementById("feed-elem").innerHTML = feedData;
+
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+  refreshFeed();
 </script>
 </body>
 </html>
