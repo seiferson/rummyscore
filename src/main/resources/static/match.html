@@ -126,7 +126,7 @@
       .then(([matchData, userData]) => {
 
         let dateObj = new Date(matchData.startDate);
-        let formattedDate = date.toLocaleString('en-US', {
+        let formattedDate = dateObj.toLocaleString('en-US', {
             month: 'short',
             day: 'numeric',
             year: 'numeric',
