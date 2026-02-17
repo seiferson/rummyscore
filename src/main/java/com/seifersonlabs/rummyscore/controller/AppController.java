@@ -11,4 +11,9 @@ public class AppController {
     public String matches(@PathVariable String matchId) {
         return "forward:/match.html";
     }
+
+    @GetMapping("/players/{playerId}")
+    public String players(@PathVariable String playerId) {
+        return "forward:/profile.html";
+    }
 }

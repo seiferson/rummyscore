@@ -124,6 +124,8 @@
     Promise.all([matchData, userData])
       .then(([matchData, userData]) => {
 
+        console.log(userData);
+
         let dateObj = new Date(matchData.startDate);
         let formattedDate = dateObj.toLocaleString('en-US', {
             month: 'short',
