@@ -159,7 +159,9 @@
       console.log('[INFO] rummyscore::index.html::fetch::/api/v1/authx/getuserinfo ' + data);
 
       document.getElementById('menu-avatar-elem').innerHTML =
-          "<a href=\"/profile.html\"><img class=\"ui avatar image\" src=" + data.avatar + "/>@" + data.nickname + "</a>";
+          "<a href=\"/players/" + data.nickname + "\">" +
+          "<img class=\"ui avatar image\" src=" + data.avatar + "/>@" + data.nickname +
+          "</a>";
 
       document.getElementById("host-placeholder-elem").innerHTML =
           "<button class=\"ui basic right floated icon button\" id=\"host-game-button\">"+
@@ -210,7 +212,8 @@
               "<div class=\"content\">" +
               "<div class=\"date\">" + event.startDate + "</div>" +
               "<div class=\"summary\">" +
-              "<a class=\"user\">@" +event.host.nickname + "</a> is hosting <a>#"+ event.id.substring(0,5) +"</a>" +
+              "<a href=\"/players/" + event.host.nickname + "\" class=\"user\">@" +event.host.nickname + "</a> is hosting " +
+              "<a href=\"/matches/" + event.id + "\"> #"+ event.id.substring(0,5) +"</a>" +
               "</div>" +
               "<div class=\"meta\">" +
               "<span><i class=\"user icon\"></i> ?</span>" +

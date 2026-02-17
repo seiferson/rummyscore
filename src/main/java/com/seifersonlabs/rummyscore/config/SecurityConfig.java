@@ -13,7 +13,19 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(HttpMethod.GET,"/", "/index.html", "/api/v1/authx/getuserinfo", "/error", "/api/v1/matches").permitAll()
+                        .requestMatchers(HttpMethod.GET,
+                                "/",
+                                "/index.html",
+                                "/api/v1/authx/getuserinfo",
+                                "/error",
+                                "/api/v1/matches",
+                                "/profile.html",
+                                "/tournament.html",
+                                "/match.html",
+                                "/players/*",
+                                "/matches/*",
+                                "/tournaments/*"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
