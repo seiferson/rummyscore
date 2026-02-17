@@ -133,7 +133,7 @@
             "<img class=\"ui avatar image\" src=\"" + userData.avatar + "\"/>@" + userData.nickname +
             "</a>";
 
-        let hasPlayerJoined = data.scores.some(score => score.player.nickname === userData.nickname);
+        let hasPlayerJoined = matchData.scores.some(score => score.player.nickname === userData.nickname);
 
         if(!hasPlayerJoined) {
           document.getElementById("join-placeholder-elem").innerHTML =
