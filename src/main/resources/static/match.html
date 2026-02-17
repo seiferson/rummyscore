@@ -47,7 +47,7 @@
           <div id="join-placeholder-elem"></div>
           <br />
           <br />
-          <table class="ui very basic celled fluid table">
+          <table class="ui very basic celled fluid unstackable table">
             <thead>
               <tr>
                 <th>player</th>
@@ -81,60 +81,59 @@
             </tbody>
           </table>
         </div>
+      </div>
     </div>
-    </div>
-
   </div>
+
+  <br />
+  <br />
+  <div class="ui basic segment">
+    <div class="ui horizontal divider"><i class="mountain icon"></i></div>
+    <div class="ui container">
+      <div class="ten wide column">
+        <div class="ui labels">
+          <a class="ui label" href="https://github.com/seiferson/rummyscore">
+            <i class="github icon"></i>github
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
 
     let url = window.location.pathname;
     let matchId = url.split("/").at(-1);
-    let matchInfo = null;
-    let matchInfoLock = true;
 
-    fetch('/api/v1/matches/' + matchId)
+    let matchData = fetch('/api/v1/matches/' + matchId)
       .then(response => {
         if (!response.ok) {
           throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/matches/' + matchId + ' ' + response.statusText);
         }
         return response.json();
-      })
-      .then(data => {
-        console.log('[INFO] rummyscore::match.html::fetch::/api/v1/matches/'  + matchId + ' ' + data);
-        matchInfo = data;
-        document.getElementById("page-header-elem").innerHTML = "<i class=\"dice three icon\"></i> #" + matchId.substring(0,5);
-        document.getElementById("page-subheader-elem").innerHTML =
-            "<i class=\"user icon\"></i> <a href=\"/players/" + data.host.nickname + "\"\>@" + data.host.nickname + "</a>" +
-            " " + data.startDate;
-        matchInfoLock = false;
-      })
-      .catch(error => {
-        console.error(error);
       });
 
-    fetch('/api/v1/authx/getuserinfo')
+    let userData = fetch('/api/v1/authx/getuserinfo')
       .then(response => {
         if (!response.ok) {
           throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/authx/getuserinfo ' + response.statusText);
         }
         return response.json();
-      })
-      .then(userData => {
-        console.log('[INFO] rummyscore::match.html::fetch::/api/v1/authx/getuserinfo ' + userData);
+      });
 
+    Promise.all(matchData, userData)
+      .then(([matchData, userData]) => {
+
+        document.getElementById("page-header-elem").innerHTML = "<i class=\"dice three icon\"></i> #" + matchId.substring(0,5);
+        document.getElementById("page-subheader-elem").innerHTML =
+            "<i class=\"user icon\"></i> <a href=\"/players/" + matchData.host.nickname + "\"\>@" + matchData.host.nickname + "</a>" +
+            " " + matchData.startDate;
         document.getElementById('menu-avatar-elem').innerHTML =
             "<a href=\"/players/" + userData.nickname + "\">" +
             "<img class=\"ui avatar image\" src=\"" + userData.avatar + "\"/>@" + userData.nickname +
             "</a>";
 
-        while(matchInfoLock){}
-
-        let hasPlayerJoined = false;
-        matchInfo.scores.forEach(function(score) {
-          if(score.player.nickname === userData.nickname){
-            hasPlayerJoined = true;
-          }
-        });
+        let hasPlayerJoined = data.scores.some(score => score.player.nickname === userData.nickname);
 
         if(!hasPlayerJoined) {
           document.getElementById("join-placeholder-elem").innerHTML =
@@ -155,7 +154,6 @@
                   return response.json();
                 })
                 .then(scoreData => {
-                  console.log('[INFO] rummyscore::match.html::fetch::/api/v1/scores::post ' + scoreData);
                   document.getElementById("scores-elem").innerHTML = document.getElementById("scores-elem").innerHTML +
                       "<tr>" +
                       "<td>" +
@@ -174,15 +172,12 @@
                       "<td class=\"center aligned\">22</td>" +
                       "<td class=\"center aligned\">22</td>" +
                       "</tr>"
-                })
-                .catch(error => {
-                    console.error(error);
-                });
+              })
+              .catch(error => {
+                console.error(error);
+              });
             });
         }
-      })
-      .catch(error => {
-        console.error(error);
       });
   </script>
 </body>

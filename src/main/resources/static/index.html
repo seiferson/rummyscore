@@ -186,9 +186,8 @@
         return response.json();
       })
       .then(data => {
-        console.log('[INFO] rummyscore::index.html::fetch::/api/v1/matches::get ' + data);
-
         let feedData = "";
+        
         data.content.forEach( function(event) {
           feedData +=
               "<div class=\"event\">" +
