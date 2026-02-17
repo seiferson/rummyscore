@@ -71,4 +71,12 @@ public class Match {
     public void setHost(Player host) {
         this.host = host;
     }
+
+    public List<Score> getScores() {
+        return scores;
+    }
+
+    public void setScores(List<Score> scores) {
+        this.scores = scores;
+    }
 }
