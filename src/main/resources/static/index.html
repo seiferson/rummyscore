@@ -228,6 +228,18 @@
 
         if(!feedData.empty()) {
           document.getElementById("feed-elem").innerHTML = feedData;
+        } else {
+            document.getElementById("feed-elem").innerHTML = "<div class=\"event\">" +
+                "<div class=\"label\">" +
+                "<img src=\"https://api.dicebear.com/9.x/notionists-neutral/svg?seed=doom\" alt=\"user avatar\">" +
+                "</div>" +
+                "<div class=\"content\">" +
+                "<div class=\"date\">" + (new Date()) + "</div>" +
+                "<div class=\"summary\">" +
+                "nothing in here" +
+                "</div>" +
+                "</div>" +
+                "</div>";
         }
 
       })
