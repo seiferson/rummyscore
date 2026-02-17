@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.util.Date;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -76,6 +77,23 @@ public class AppRestAPI {
             return ResponseEntity.badRequest().build();
         }
 
+    }
+
+    @PostMapping("/scores")
+    public ResponseEntity<Score> createMatch(@AuthenticationPrincipal OAuth2User principal, @RequestBody Map<String, Object> data) {
+        Optional<Player> host = playerRepo.findByEmail(principal.getAttribute("email"));
+        Optional<Match> match = matchRepo.findById(UUID.fromString((String) data.get("matchId")));
+
+        if (host.isPresent() && match.isPresent()) {
+            Score newScore = new Score();
+            newScore.setPlayer(host.get());
+            newScore.setMatch(match.get());
+
+            newScore = scoreRepo.save(newScore);
+            return ResponseEntity.ok(newScore);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping("/authx/getuserinfo")

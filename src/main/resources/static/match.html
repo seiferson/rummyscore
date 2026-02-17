@@ -37,69 +37,59 @@
     <br />
     <br />
     <br />
-    <h4 class="ui center aligned icon header">
-      <i class="circular dice icon"></i> scoreboard
-    </h4>
 
-    <br />
-    <br />
-    <table class="ui very basic celled fluid table">
-      <thead>
-        <tr>
-          <th>player</th>
-          <th class="center aligned">round 1</th>
-          <th class="center aligned">round 2</th>
-          <th class="center aligned">round 3</th>
-          <th class="center aligned">round 4</th>
-          <th class="center aligned">round 5</th>
-          <th class="center aligned">round 6</th>
-          <th class="center aligned">round 7</th>
-        </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td>
-          <h4 class="ui image header">
-            <img src="https://api.dicebear.com/9.x/notionists-neutral/svg?seed=doom" class="ui mini rounded image">
-            <div class="content">
-              <a href="/players/">@doom</a>
-            </div>
+    <div class="ui stackable grid">
+      <div class="row">
+        <div class="eleven wide column">
+          <h4 class="ui center aligned icon header">
+            <i class="circular dice icon"></i> scoreboard
           </h4>
-        </td>
-        <td class="center aligned">22</td>
-        <td class="center aligned">22</td>
-        <td class="center aligned">22</td>
-        <td class="center aligned">22</td>
-        <td class="center aligned">22</td>
-        <td class="center aligned">22</td>
-        <td class="center aligned">22</td>
-      </tr>
-      </tbody>
-    </table>
+          <div id="join-placeholder-elem"></div>
+          <br />
+          <br />
+          <table class="ui very basic celled fluid table">
+            <thead>
+              <tr>
+                <th>player</th>
+                <th class="center aligned">round 1</th>
+                <th class="center aligned">round 2</th>
+                <th class="center aligned">round 3</th>
+                <th class="center aligned">round 4</th>
+                <th class="center aligned">round 5</th>
+                <th class="center aligned">round 6</th>
+                <th class="center aligned">round 7</th>
+              </tr>
+            </thead>
+            <tbody id="scores-elem">
+              <tr>
+                <td>
+                  <h4 class="ui image header">
+                    <img src="https://api.dicebear.com/9.x/notionists-neutral/svg?seed=doom" class="ui mini rounded image">
+                    <div class="content">
+                      <a href="/players/">@doom</a>
+                    </div>
+                  </h4>
+                </td>
+                <td class="center aligned">22</td>
+                <td class="center aligned">22</td>
+                <td class="center aligned">22</td>
+                <td class="center aligned">22</td>
+                <td class="center aligned">22</td>
+                <td class="center aligned">22</td>
+                <td class="center aligned">22</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+    </div>
+    </div>
 
   </div>
   <script>
-    fetch('/api/v1/authx/getuserinfo')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/authx/getuserinfo ' + response.statusText);
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log('[INFO] rummyscore::match.html::fetch::/api/v1/authx/getuserinfo ' + data);
-
-        document.getElementById('menu-avatar-elem').innerHTML =
-            "<a href=\"/players/" + data.nickname + "\">" +
-            "<img class=\"ui avatar image\" src=\"" + data.avatar + "\"/>@" + data.nickname +
-            "</a>";
-      })
-      .catch(error => {
-          console.error(error);
-      });
 
     let url = window.location.pathname;
     let matchId = url.split("/").at(-1);
+    let matchInfo = null;
 
     fetch('/api/v1/matches/' + matchId)
       .then(response => {
@@ -109,11 +99,83 @@
         return response.json();
       })
       .then(data => {
-        console.log('[INFO] rummyscore::match.html::fetch::/api/v1/matches/matchId/'  + matchId + ' ' + data);
+        console.log('[INFO] rummyscore::match.html::fetch::/api/v1/matches/'  + matchId + ' ' + data);
+        matchInfo = data;
         document.getElementById("page-header-elem").innerHTML = "<i class=\"dice three icon\"></i> #" + matchId.substring(0,5);
         document.getElementById("page-subheader-elem").innerHTML =
             "<i class=\"user icon\"></i> <a href=\"/players/" + data.host.nickname + "\"\>@" + data.host.nickname + "</a>" +
             " " + data.startDate;
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
+    fetch('/api/v1/authx/getuserinfo')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/authx/getuserinfo ' + response.statusText);
+        }
+        return response.json();
+      })
+      .then(userData => {
+        console.log('[INFO] rummyscore::match.html::fetch::/api/v1/authx/getuserinfo ' + userData);
+
+        document.getElementById('menu-avatar-elem').innerHTML =
+            "<a href=\"/players/" + userData.nickname + "\">" +
+            "<img class=\"ui avatar image\" src=\"" + userData.avatar + "\"/>@" + userData.nickname +
+            "</a>";
+
+        let hasPlayerJoined = false;
+        matchInfo.scores.forEach(function (score) {
+          if(score.player.nickname === userData.nickname){
+            hasPlayerJoined = true;
+          }
+        });
+
+        if(!hasPlayerJoined) {
+          document.getElementById("join-placeholder-elem").innerHTML =
+              "<button class=\"ui basic right floated icon button\" id=\"join-game-button\">"+
+              "<i class=\"sign in alternate icon\"></i>" +
+              "</button>";
+
+          let joinRequest = {"matchId" : matchId}
+
+          document
+            .getElementById("host-game-button")
+            .addEventListener("click", function () {
+              fetch("/api/v1/scores", {method: "POST", body: joinRequest})
+                .then(response => {
+                  if (!response.ok) {
+                    throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/scores::post ' + response.statusText);
+                  }
+                  return response.json();
+                })
+                .then(scoreData => {
+                  console.log('[INFO] rummyscore::match.html::fetch::/api/v1/scores::post ' + scoreData);
+                  document.getElementById("scores-elem").innerHTML = document.getElementById("scores-elem").innerHTML +
+                      "<tr>" +
+                      "<td>" +
+                      "<h4 class=\"ui image header\">" +
+                      "<img src=\"" + userData.avatar + "\" class=\"ui mini rounded image\">" +
+                      "<div class=\"content\">" +
+                      "<a href=\"/players/" + userData.nickname + "\" >@ " + userData.nickname + "</a>" +
+                      "</div>" +
+                      "</h4>" +
+                      "</td>" +
+                      "<td class=\"center aligned\">22</td>" +
+                      "<td class=\"center aligned\">22</td>" +
+                      "<td class=\"center aligned\">22</td>" +
+                      "<td class=\"center aligned\">22</td>" +
+                      "<td class=\"center aligned\">22</td>" +
+                      "<td class=\"center aligned\">22</td>" +
+                      "<td class=\"center aligned\">22</td>" +
+                      "</tr>"
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+            });
+        }
       })
       .catch(error => {
         console.error(error);
