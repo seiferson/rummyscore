@@ -121,7 +121,7 @@
         return response.json();
       });
 
-    Promise.all(matchData, userData)
+    Promise.all([matchData, userData])
       .then(([matchData, userData]) => {
 
         document.getElementById("page-header-elem").innerHTML = "<i class=\"dice three icon\"></i> #" + matchId.substring(0,5);
