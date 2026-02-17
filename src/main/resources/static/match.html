@@ -133,7 +133,7 @@
         document.getElementById("page-header-elem").innerHTML = "<i class=\"dice three icon\"></i> #" + matchId.substring(0,5);
         document.getElementById("page-subheader-elem").innerHTML =
             "<i class=\"user icon\"></i> <a href=\"/players/" + matchData.host.nickname + "\"\>@" + matchData.host.nickname + "</a>" +
-            " " + formattedDate;
+            " <i class=\"calendar alternate outline\n icon\"></i>" + formattedDate;
         document.getElementById('menu-avatar-elem').innerHTML =
             "<a href=\"/players/" + userData.nickname + "\">" +
             "<img class=\"ui avatar image\" src=\"" + userData.avatar + "\"/>@" + userData.nickname +
