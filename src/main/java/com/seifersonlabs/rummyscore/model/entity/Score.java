@@ -92,4 +92,20 @@ public class Score {
     public void setRound7Score(Integer round7Score) {
         this.round7Score = round7Score;
     }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public Match getMatch() {
+        return match;
+    }
+
+    public void setMatch(Match match) {
+        this.match = match;
+    }
 }

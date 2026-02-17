@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -22,6 +23,10 @@ public class Match {
     @ManyToOne
     @JoinColumn(name = "hostId", nullable = false)
     private Player host;
+
+    @OneToMany
+    @JoinColumn(name = "matchId")
+    private List<Score> scores;
 
     @Column(nullable = false)
     private Date startDate;

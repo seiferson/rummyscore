@@ -164,7 +164,7 @@
 
       document.getElementById('menu-avatar-elem').innerHTML =
           "<a href=\"/players/" + data.nickname + "\">" +
-          "<img class=\"ui avatar image\" src=" + data.avatar + "/>@" + data.nickname +
+          "<img class=\"ui avatar image\" src=\"" + data.avatar + "\"/>@" + data.nickname +
           "</a>";
 
       document.getElementById("host-placeholder-elem").innerHTML =
@@ -236,7 +236,7 @@
                 "<div class=\"content\">" +
                 "<div class=\"date\">" + (new Date()).toISOString() + "</div>" +
                 "<div class=\"summary\">" +
-                "no <events></events>" +
+                "no events" +
                 "</div>" +
                 "</div>" +
                 "</div>";

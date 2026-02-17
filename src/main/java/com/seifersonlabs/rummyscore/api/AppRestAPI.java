@@ -2,8 +2,10 @@ package com.seifersonlabs.rummyscore.api;
 
 import com.seifersonlabs.rummyscore.model.entity.Match;
 import com.seifersonlabs.rummyscore.model.entity.Player;
+import com.seifersonlabs.rummyscore.model.entity.Score;
 import com.seifersonlabs.rummyscore.model.repo.MatchRepo;
 import com.seifersonlabs.rummyscore.model.repo.PlayerRepo;
+import com.seifersonlabs.rummyscore.model.repo.ScoreRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +32,9 @@ public class AppRestAPI {
     @Autowired
     private MatchRepo matchRepo;
 
+    @Autowired
+    private ScoreRepo scoreRepo;
+
     @GetMapping("/matches")
     public ResponseEntity<Page<Match>> getMatches(@AuthenticationPrincipal OAuth2User principal, @RequestParam int page) {
         Pageable pageable = PageRequest.of(page, 5, Sort.by("startDate"));
@@ -51,6 +56,13 @@ public class AppRestAPI {
             match.setHost(host.get());
 
             match = matchRepo.save(match);
+
+            Score score = new Score();
+
+            score.setPlayer(host.get());
+            score.setMatch(match);
+
+            scoreRepo.save(score);
 
             return ResponseEntity.ok(match);
         } else {
