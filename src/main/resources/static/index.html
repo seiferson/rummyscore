@@ -134,6 +134,8 @@
   </div>
 
 <script>
+  let userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
   fetch('/api/v1/authx/getuserinfo')
     .then(response => {
       if (!response.ok) {
@@ -189,13 +191,24 @@
         let feedData = "";
         
         data.content.forEach( function(event) {
+          let dateObj = new Date(event.startDate);
+          let formattedDate = date.toLocaleString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: false,
+                timeZone: userTimeZone
+          });
+
           feedData +=
               "<div class=\"event\">" +
               "<div class=\"label\">" +
               "<img src=" + event.host.avatar +" alt=\"user avatar\">" +
               "</div>" +
               "<div class=\"content\">" +
-              "<div class=\"date\">" + event.startDate + "</div>" +
+              "<div class=\"date\">" + formattedDate + "</div>" +
               "<div class=\"summary\">" +
               "<a href=\"/players/" + event.host.nickname + "\" class=\"user\">@" +event.host.nickname + "</a> is hosting " +
               "<a href=\"/matches/" + event.id + "\"> #"+ event.id.substring(0,5) +"</a>" +
@@ -210,12 +223,22 @@
         if(!(feedData === "")) {
           document.getElementById("feed-elem").innerHTML = feedData;
         } else {
+            let dateObj = new Date();
+            let formattedDate = date.toLocaleString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: false,
+                timeZone: userTimeZone
+            });
             document.getElementById("feed-elem").innerHTML = "<div class=\"event\">" +
                 "<div class=\"label\">" +
                 "<img src=\"https://api.dicebear.com/9.x/notionists-neutral/svg?seed=doom\" alt=\"user avatar\">" +
                 "</div>" +
                 "<div class=\"content\">" +
-                "<div class=\"date\">" + (new Date()).toISOString() + "</div>" +
+                "<div class=\"date\">" + formattedDate + "</div>" +
                 "<div class=\"summary\">" +
                 "no events" +
                 "</div>" +

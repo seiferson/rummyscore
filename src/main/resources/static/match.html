@@ -104,6 +104,7 @@
 
     let url = window.location.pathname;
     let matchId = url.split("/").at(-1);
+    let userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
     let matchData = fetch('/api/v1/matches/' + matchId)
       .then(response => {
@@ -124,10 +125,20 @@
     Promise.all([matchData, userData])
       .then(([matchData, userData]) => {
 
+        let dateObj = new Date(matchData.startDate);
+        let formattedDate = date.toLocaleString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: false,
+            timeZone: userTimeZone
+        });
         document.getElementById("page-header-elem").innerHTML = "<i class=\"dice three icon\"></i> #" + matchId.substring(0,5);
         document.getElementById("page-subheader-elem").innerHTML =
             "<i class=\"user icon\"></i> <a href=\"/players/" + matchData.host.nickname + "\"\>@" + matchData.host.nickname + "</a>" +
-            " " + matchData.startDate;
+            " " + formattedDate;
         document.getElementById('menu-avatar-elem').innerHTML =
             "<a href=\"/players/" + userData.nickname + "\">" +
             "<img class=\"ui avatar image\" src=\"" + userData.avatar + "\"/>@" + userData.nickname +
