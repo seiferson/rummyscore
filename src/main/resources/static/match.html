@@ -90,8 +90,9 @@
     let url = window.location.pathname;
     let matchId = url.split("/").at(-1);
     let matchInfo = null;
+    let matchInfoLock = true;
 
-    await fetch('/api/v1/matches/' + matchId)
+    fetch('/api/v1/matches/' + matchId)
       .then(response => {
         if (!response.ok) {
           throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/matches/' + matchId + ' ' + response.statusText);
@@ -105,12 +106,13 @@
         document.getElementById("page-subheader-elem").innerHTML =
             "<i class=\"user icon\"></i> <a href=\"/players/" + data.host.nickname + "\"\>@" + data.host.nickname + "</a>" +
             " " + data.startDate;
+        matchInfoLock = false;
       })
       .catch(error => {
         console.error(error);
       });
 
-    await fetch('/api/v1/authx/getuserinfo')
+    fetch('/api/v1/authx/getuserinfo')
       .then(response => {
         if (!response.ok) {
           throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/authx/getuserinfo ' + response.statusText);
@@ -124,6 +126,8 @@
             "<a href=\"/players/" + userData.nickname + "\">" +
             "<img class=\"ui avatar image\" src=\"" + userData.avatar + "\"/>@" + userData.nickname +
             "</a>";
+
+        while(matchInfoLock){}
 
         let hasPlayerJoined = false;
         matchInfo.scores.forEach(function(score) {
