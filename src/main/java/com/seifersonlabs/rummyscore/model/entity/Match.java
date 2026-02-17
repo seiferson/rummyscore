@@ -1,5 +1,6 @@
 package com.seifersonlabs.rummyscore.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -18,9 +19,13 @@ public class Match {
     @JoinColumn(name = "tournamentId")
     private Tournament tournament;
 
+    @ManyToOne
+    @JoinColumn(name = "hostId", nullable = false)
+    private Player host;
+
+    @Column(nullable = false)
     private Date startDate;
     private Date endDate;
-
 
     public UUID getId() {
         return id;
@@ -52,5 +57,13 @@ public class Match {
 
     public void setTournament(Tournament tournament) {
         this.tournament = tournament;
+    }
+
+    public Player getHost() {
+        return host;
+    }
+
+    public void setHost(Player host) {
+        this.host = host;
     }
 }

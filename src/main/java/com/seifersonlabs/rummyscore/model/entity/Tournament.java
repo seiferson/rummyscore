@@ -9,6 +9,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "tournaments")
 public class Tournament {
+
     @Id
     @Column(columnDefinition = "UUID")
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,9 +19,13 @@ public class Tournament {
     @JoinColumn(name = "tournamentId")
     private List<Match> matches;
 
-    private Date startDate;
-    private Date endDate;
+    @Column(unique = true, nullable = false)
     private String name;
+
+    @Column(nullable = false)
+    private Date startDate;
+
+    private Date endDate;
 
     public UUID getId() {
         return id;

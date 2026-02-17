@@ -14,6 +14,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
+import java.util.Date;
 import java.util.Optional;
 
 import static com.seifersonlabs.rummyscore.util.Constants.AVATAR_ATTRS;
@@ -35,6 +36,27 @@ public class AppRestAPI {
         Page<Match> matches = matchRepo.findAll(pageable);
 
         return ResponseEntity.ok(matches);
+    }
+
+    @PostMapping("/matches")
+    public ResponseEntity<Match> createMatch(@AuthenticationPrincipal OAuth2User principal) {
+        Optional<Player> host = playerRepo.findByEmail(principal.getAttribute("email"));
+
+        if (host.isPresent()) {
+            Match match = new Match();
+
+            match.setId(null);
+            match.setStartDate(new Date());
+            match.setEndDate(null);
+            match.setHost(host.get());
+
+            match = matchRepo.save(match);
+
+            return ResponseEntity.ok(match);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+
     }
 
     @GetMapping("/authx/getuserinfo")
