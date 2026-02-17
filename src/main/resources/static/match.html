@@ -106,7 +106,7 @@
         return response.json();
       })
       .then(data => {
-        console.log('[INFO] rummyscore::index.html::fetch::/api/v1/matches/matchId/'  + matchId + ' ' + data);
+        console.log('[INFO] rummyscore::match.html::fetch::/api/v1/matches/matchId/'  + matchId + ' ' + data);
         document.getElementById("page-header-elem").innerHTML = "Match + #" + matchId.substring(0,5);
         document.getElementById("page-subheader-elem").innerHTML = "hosted by <a href=\"/players/" + data.host.nickname + "\"\>@" + data.host.nickname;
       })

@@ -9,6 +9,6 @@ public class AppController {
 
     @GetMapping("/matches/{matchId}")
     public String matches(@PathVariable String matchId) {
-        return "redirect:/match.html";
+        return "forward:/match.html";
     }
 }
