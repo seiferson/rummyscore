@@ -37,29 +37,32 @@
     <br />
     <br />
 
-    <div class="ui centered card">
-      <div class="content">
-        <div class="header">r1 2x[A♥, A♦, A♣]</div>
-        <div class="meta">
-          <span><i class="circle check outline icon"></i> 3</span>
-        </div>
-        <p>
-          <form class="ui form">
-            <div class="field">
-              <label>score</label>
-              <input type="text" name="score" placeholder="123">
-            </div>
-            <button class="ui basic button" type="submit">submit</button>
-          </form>
-        </p>
-      </div>
-    </div>
-
-    <br />
-
-
     <div class="ui stackable grid">
       <div class="row">
+        <div class="five wide column">
+          <div class="ui centered card">
+            <div class="content">
+              <div class="header"><i class="dice one icon"></i> round 1 </div>
+              <div class="meta">
+                <span><i class="circle check outline icon"></i> 3</span>
+              </div>
+              <br />
+              <div class="ui label"><i class="dice two icon"></i> A♥ A♦ A♣</div>
+              <div class="ui label"><i class="dice one icon"></i> 8♥ 9♥ 10♥ J♥</div>
+              <br />
+              <br />
+              <p>
+              <form class="ui form">
+                <div class="fluid field">
+                  <label>your score</label>
+                  <input type="text" size="4" name="score" placeholder="123" />
+                </div>
+                <button class="ui right floated basic icon button" type="submit"><i class="arrow alternate circle up outline icon"></i></button>
+              </form>
+              </p>
+            </div>
+          </div>
+        </div>
         <div class="eleven wide column">
           <h4 class="ui center aligned icon header">
             <i class="circular dice icon"></i> scoreboard
@@ -121,12 +124,47 @@
     let matchId = url.split("/").at(-1);
     let userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
+    function refreshScoreboard() {
+      fetch('/api/v1/matches/' + matchId)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/matches/' + matchId + ' ' + response.statusText);
+          }
+          return response.json();
+        })
+        .then(matchData => {
+          let scoreboardRows = "";
+          matchData.scores.forEach(function(score){
+            scoreboardRows +=
+                "<tr>" +
+                "<td>" +
+                "<a href=\"/players/" + score.player.nickname + "\" >@ " + score.player.nickname + "</a>" +
+                "</td>" +
+                "<td class=\"center aligned\">" + score.round1Score === null ? "-" : score.round1Score === 0 ? "<i class=\"trophy icon\"></i>" : score.round1Score + "</td>" +
+                "<td class=\"center aligned\">" + score.round2Score === null ? "-" : score.round2Score === 0 ? "<i class=\"trophy icon\"></i>" : score.round2Score + "</td>" +
+                "<td class=\"center aligned\">" + score.round3Score === null ? "-" : score.round3Score === 0 ? "<i class=\"trophy icon\"></i>" : score.round3Score + "</td>" +
+                "<td class=\"center aligned\">" + score.round4Score === null ? "-" : score.round4Score === 0 ? "<i class=\"trophy icon\"></i>" : score.round4Score + "</td>" +
+                "<td class=\"center aligned\">" + score.round5Score === null ? "-" : score.round5Score === 0 ? "<i class=\"trophy icon\"></i>" : score.round5Score + "</td>" +
+                "<td class=\"center aligned\">" + score.round6Score === null ? "-" : score.round6Score === 0 ? "<i class=\"trophy icon\"></i>" : score.round6Score + "</td>" +
+                "<td class=\"center aligned\">" + score.round7Score === null ? "-" : score.round7Score === 0 ? "<i class=\"trophy icon\"></i>" : score.round7Score + "</td>" +
+                "</tr>";
+          });
+          document.getElementById("scores-elem").innerHTML = scoreboardRows;
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+
     let matchData = fetch('/api/v1/matches/' + matchId)
       .then(response => {
         if (!response.ok) {
           throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/matches/' + matchId + ' ' + response.statusText);
         }
         return response.json();
+      })
+      .catch(error => {
+        console.error(error);
       });
 
     let userData = fetch('/api/v1/authx/getuserinfo')
@@ -135,12 +173,20 @@
           throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/authx/getuserinfo ' + response.statusText);
         }
         return response.json();
+      })
+      .catch(error => {
+        console.error(error);
       });
 
     Promise.all([matchData, userData])
       .then(([matchData, userData]) => {
 
-        console.log(userData);
+        if(userData != null){
+          document.getElementById('menu-avatar-elem').innerHTML =
+              "<a href=\"/players/" + userData.nickname + "\">" +
+              "<img class=\"ui avatar image\" src=\"" + userData.avatar + "\"/>@" + userData.nickname +
+              "</a>";
+        }
 
         let dateObj = new Date(matchData.startDate);
         let formattedDate = dateObj.toLocaleString('en-US', {
@@ -152,67 +198,62 @@
             hour12: false,
             timeZone: userTimeZone
         });
+
         document.getElementById("page-header-elem").innerHTML = "<i class=\"dice three icon\"></i> #" + matchId.substring(0,5);
         document.getElementById("page-subheader-elem").innerHTML =
             "<i class=\"user icon\"></i> <a href=\"/players/" + matchData.host.nickname + "\"\>@" + matchData.host.nickname + "</a>" +
             " <i class=\"calendar alternate outline\n icon\"></i>" + formattedDate;
-        document.getElementById('menu-avatar-elem').innerHTML =
-            "<a href=\"/players/" + userData.nickname + "\">" +
-            "<img class=\"ui avatar image\" src=\"" + userData.avatar + "\"/>@" + userData.nickname +
-            "</a>";
 
-        let hasPlayerJoined = matchData.scores.some(score => score.player.nickname === userData.nickname);
+        let scoreboardRows = "";
+        matchData.scores.forEach(function(score){
+          scoreboardRows +=
+              "<tr>" +
+              "<td>" +
+              "<a href=\"/players/" + score.player.nickname + "\" >@ " + score.player.nickname + "</a>" +
+              "</td>" +
+              "<td class=\"center aligned\">" + score.round1Score === null ? "-" : score.round1Score === 0 ? "<i class=\"trophy icon\"></i>" : score.round1Score + "</td>" +
+              "<td class=\"center aligned\">" + score.round2Score === null ? "-" : score.round2Score === 0 ? "<i class=\"trophy icon\"></i>" : score.round2Score + "</td>" +
+              "<td class=\"center aligned\">" + score.round3Score === null ? "-" : score.round3Score === 0 ? "<i class=\"trophy icon\"></i>" : score.round3Score + "</td>" +
+              "<td class=\"center aligned\">" + score.round4Score === null ? "-" : score.round4Score === 0 ? "<i class=\"trophy icon\"></i>" : score.round4Score + "</td>" +
+              "<td class=\"center aligned\">" + score.round5Score === null ? "-" : score.round5Score === 0 ? "<i class=\"trophy icon\"></i>" : score.round5Score + "</td>" +
+              "<td class=\"center aligned\">" + score.round6Score === null ? "-" : score.round6Score === 0 ? "<i class=\"trophy icon\"></i>" : score.round6Score + "</td>" +
+              "<td class=\"center aligned\">" + score.round7Score === null ? "-" : score.round7Score === 0 ? "<i class=\"trophy icon\"></i>" : score.round7Score + "</td>" +
+              "</tr>";
+        });
+        document.getElementById("scores-elem").innerHTML = scoreboardRows;
 
-        if(!hasPlayerJoined) {
+        if (userData != null) {
+        let hasPlayerJoinedMatch = matchData.scores.some(score => score.player.nickname === userData.nickname);
+
+        if (!hasPlayerJoinedMatch) {
           document.getElementById("join-placeholder-elem").innerHTML =
-              "<button class=\"ui basic right floated icon button\" id=\"join-game-button\">"+
+              "<button class=\"ui basic right floated icon button\" id=\"join-game-button\">" +
               "<i class=\"sign in alternate icon\"></i>" +
               "</button>";
+        }
 
-          let joinRequest = {"matchId" : matchId}
+        let joinRequest = {"matchId": matchId};
 
-          document
-            .getElementById("join-game-button")
-            .addEventListener("click", function () {
-              fetch("/api/v1/scores", {
-                  method: "POST",
-                  headers: {
-                      "Content-Type": "application/json"
-                  },
-                  body: JSON.stringify(joinRequest)
+        document
+          .getElementById("join-game-button")
+          .addEventListener("click", function () {
+            fetch("/api/v1/scores", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(joinRequest)
+            })
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/scores::post ' + response.statusText);
+                }
+                return response.json();
               })
-                .then(response => {
-                  if (!response.ok) {
-                    throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/scores::post ' + response.statusText);
-                  }
-                  return response.json();
-                })
-                .then(scoreData => {
-                  document.getElementById("scores-elem").innerHTML = document.getElementById("scores-elem").innerHTML +
-                      "<tr>" +
-                      "<td>" +
-                      "<h4 class=\"ui image header\">" +
-                      "<img src=\"" + userData.avatar + "\" class=\"ui mini rounded image\">" +
-                      "<div class=\"content\">" +
-                      "<a href=\"/players/" + userData.nickname + "\" >@ " + userData.nickname + "</a>" +
-                      "</div>" +
-                      "</h4>" +
-                      "</td>" +
-                      "<td class=\"center aligned\">198</td>" +
-                      "<td class=\"center aligned\">643</td>" +
-                      "<td class=\"center aligned\">753</td>" +
-                      "<td class=\"center aligned\">948</td>" +
-                      "<td class=\"center aligned\">223</td>" +
-                      "<td class=\"center aligned\">932</td>" +
-                      "<td class=\"center aligned\">632</td>" +
-                      "</tr>";
-
-                  document.getElementById("join-placeholder-elem").innerHTML = "";
-              })
-              .catch(error => {
-                console.error(error);
+              .then(scoreData => {
+                refreshScoreboard();
               });
-            });
+          });
         }
       });
   </script>
