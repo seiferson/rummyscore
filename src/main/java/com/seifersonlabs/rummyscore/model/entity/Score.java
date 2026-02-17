@@ -1,5 +1,6 @@
 package com.seifersonlabs.rummyscore.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.UUID;
@@ -19,6 +20,7 @@ public class Score {
 
     @ManyToOne
     @JoinColumn(name = "matchId")
+    @JsonIgnore
     private Match match;
 
     private Integer round1Score;
