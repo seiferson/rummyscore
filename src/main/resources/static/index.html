@@ -192,7 +192,7 @@
         
         data.content.forEach( function(event) {
           let dateObj = new Date(event.startDate);
-          let formattedDate = date.toLocaleString('en-US', {
+          let formattedDate = dateObj.toLocaleString('en-US', {
                 month: 'short',
                 day: 'numeric',
                 year: 'numeric',
