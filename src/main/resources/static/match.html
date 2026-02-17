@@ -181,6 +181,7 @@
     Promise.all([matchData, userData])
       .then(([matchData, userData]) => {
 
+        console.log(userData);
         if(userData != null){
           document.getElementById('menu-avatar-elem').innerHTML =
               "<a href=\"/players/" + userData.nickname + "\">" +
