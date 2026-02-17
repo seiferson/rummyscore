@@ -112,7 +112,7 @@
         console.log('[INFO] rummyscore::match.html::fetch::/api/v1/matches/matchId/'  + matchId + ' ' + data);
         document.getElementById("page-header-elem").innerHTML = "<i class=\"dice three icon\"></i> #" + matchId.substring(0,5);
         document.getElementById("page-subheader-elem").innerHTML =
-            "<i class=\"user icon\"></i> <a href=\"/players/" + data.host.nickname + "\"\>@" + data.host.nickname + "</a>"
+            "<i class=\"user icon\"></i> <a href=\"/players/" + data.host.nickname + "\"\>@" + data.host.nickname + "</a>" +
             " " + data.startDate;
       })
       .catch(error => {
