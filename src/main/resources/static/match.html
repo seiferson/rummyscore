@@ -51,13 +51,13 @@
             <thead>
               <tr>
                 <th>player</th>
-                <th class="center aligned">round 1</th>
-                <th class="center aligned">round 2</th>
-                <th class="center aligned">round 3</th>
-                <th class="center aligned">round 4</th>
-                <th class="center aligned">round 5</th>
-                <th class="center aligned">round 6</th>
-                <th class="center aligned">round 7</th>
+                <th class="center aligned">r1</th>
+                <th class="center aligned">r2</th>
+                <th class="center aligned">r3</th>
+                <th class="center aligned">r4</th>
+                <th class="center aligned">r5</th>
+                <th class="center aligned">r6</th>
+                <th class="center aligned">r7</th>
               </tr>
             </thead>
             <tbody id="scores-elem">
@@ -146,7 +146,13 @@
           document
             .getElementById("join-game-button")
             .addEventListener("click", function () {
-              fetch("/api/v1/scores", {method: "POST", body: joinRequest})
+              fetch("/api/v1/scores", {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify(joinRequest)
+              })
                 .then(response => {
                   if (!response.ok) {
                     throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/scores::post ' + response.statusText);
@@ -171,7 +177,9 @@
                       "<td class=\"center aligned\">22</td>" +
                       "<td class=\"center aligned\">22</td>" +
                       "<td class=\"center aligned\">22</td>" +
-                      "</tr>"
+                      "</tr>";
+
+                  document.getElementById("join-placeholder-elem").innerHTML = "";
               })
               .catch(error => {
                 console.error(error);
