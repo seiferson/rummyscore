@@ -1,7 +1,6 @@
 package com.seifersonlabs.rummyscore.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -10,6 +9,6 @@ public class AppController {
 
     @GetMapping("/matches/{matchId}")
     public String matches(@PathVariable String matchId) {
-        return "match";
+        return "juego";
     }
 }
