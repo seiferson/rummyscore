@@ -18,6 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.seifersonlabs.rummyscore.util.Constants.AVATAR_ATTRS;
 import static com.seifersonlabs.rummyscore.util.Constants.DICEBEAR_URL;
@@ -41,6 +42,12 @@ public class AppRestAPI {
         Page<Match> matches = matchRepo.findAll(pageable);
 
         return ResponseEntity.ok(matches);
+    }
+
+    @GetMapping("/matches/{matchId}")
+    public ResponseEntity<Match> getMatch(@PathVariable String matchId) {
+        Optional<Match> match = matchRepo.findById(UUID.fromString(matchId));
+        return match.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/matches")

@@ -37,20 +37,23 @@
     <br />
     <br />
     <br />
-    <h2 class="ui center aligned icon header">
+    <h4 class="ui center aligned icon header">
       <i class="circular dice icon"></i> scoreboard
-    </h2>
-    <table class="ui very basic collapsing celled table">
+    </h4>
+
+    <br />
+    <br />
+    <table class="ui very basic celled fluid table">
       <thead>
         <tr>
           <th>player</th>
-          <th>round 1</th>
-          <th>round 2</th>
-          <th>round 3</th>
-          <th>round 4</th>
-          <th>round 5</th>
-          <th>round 6</th>
-          <th>round 7</th>
+          <th class="center aligned">round 1</th>
+          <th class="center aligned">round 2</th>
+          <th class="center aligned">round 3</th>
+          <th class="center aligned">round 4</th>
+          <th class="center aligned">round 5</th>
+          <th class="center aligned">round 6</th>
+          <th class="center aligned">round 7</th>
         </tr>
       </thead>
       <tbody>
@@ -63,13 +66,13 @@
             </div>
           </h4>
         </td>
-        <td>22</td>
-        <td>22</td>
-        <td>22</td>
-        <td>22</td>
-        <td>22</td>
-        <td>22</td>
-        <td>22</td>
+        <td class="center aligned">22</td>
+        <td class="center aligned">22</td>
+        <td class="center aligned">22</td>
+        <td class="center aligned">22</td>
+        <td class="center aligned">22</td>
+        <td class="center aligned">22</td>
+        <td class="center aligned">22</td>
       </tr>
       </tbody>
     </table>
@@ -101,7 +104,7 @@
     fetch('/api/v1/matches/' + matchId)
       .then(response => {
         if (!response.ok) {
-          throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/matches/matchId/' + matchId + ' ' + response.statusText);
+          throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/matches/' + matchId + ' ' + response.statusText);
         }
         return response.json();
       })
