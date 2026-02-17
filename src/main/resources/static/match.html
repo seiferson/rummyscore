@@ -91,7 +91,7 @@
     let matchId = url.split("/").at(-1);
     let matchInfo = null;
 
-    fetch('/api/v1/matches/' + matchId)
+    await fetch('/api/v1/matches/' + matchId)
       .then(response => {
         if (!response.ok) {
           throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/matches/' + matchId + ' ' + response.statusText);
@@ -110,7 +110,7 @@
         console.error(error);
       });
 
-    fetch('/api/v1/authx/getuserinfo')
+    await fetch('/api/v1/authx/getuserinfo')
       .then(response => {
         if (!response.ok) {
           throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/authx/getuserinfo ' + response.statusText);
@@ -126,7 +126,7 @@
             "</a>";
 
         let hasPlayerJoined = false;
-        matchInfo.scores.forEach(function (score) {
+        matchInfo.scores.forEach(function(score) {
           if(score.player.nickname === userData.nickname){
             hasPlayerJoined = true;
           }
@@ -141,7 +141,7 @@
           let joinRequest = {"matchId" : matchId}
 
           document
-            .getElementById("host-game-button")
+            .getElementById("join-game-button")
             .addEventListener("click", function () {
               fetch("/api/v1/scores", {method: "POST", body: joinRequest})
                 .then(response => {
