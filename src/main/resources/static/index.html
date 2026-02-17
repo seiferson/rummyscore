@@ -226,7 +226,7 @@
               "</div>"
         });
 
-        if(!feedData.empty()) {
+        if(feedData === "") {
           document.getElementById("feed-elem").innerHTML = feedData;
         } else {
             document.getElementById("feed-elem").innerHTML = "<div class=\"event\">" +
