@@ -18,7 +18,8 @@ public class SecurityConfig {
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .defaultSuccessUrl("/", true)
-                );
+                )
+                .csrf(csrf -> csrf.disable());
 
         return http.build();
     }
