@@ -224,7 +224,7 @@
           document.getElementById("feed-elem").innerHTML = feedData;
         } else {
             let dateObj = new Date();
-            let formattedDate = date.toLocaleString('en-US', {
+            let formattedDate = dateObj.toLocaleString('en-US', {
                 month: 'short',
                 day: 'numeric',
                 year: 'numeric',
