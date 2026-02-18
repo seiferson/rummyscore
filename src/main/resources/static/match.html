@@ -231,7 +231,6 @@
               "<button class=\"ui basic right floated icon button\" id=\"join-game-button\">" +
               "<i class=\"sign in alternate icon\"></i>" +
               "</button>";
-        }
 
         let joinRequest = {"matchId": matchId};
 
@@ -241,7 +240,7 @@
             fetch("/api/v1/scores", {
               method: "POST",
               headers: {
-                "Content-Type": "application/json"
+                  "Content-Type": "application/json"
               },
               body: JSON.stringify(joinRequest)
             })
@@ -255,6 +254,9 @@
                 refreshScoreboard();
               });
           });
+        }
+
+
         }
       });
   </script>
