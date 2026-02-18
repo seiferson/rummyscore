@@ -224,43 +224,42 @@
               "<td class=\"center aligned\">" + score.round7Score === null ? "-" : score.round7Score === 0 ? "<i class=\"trophy icon\"></i>" : score.round7Score + "</td>" +
               "</tr>";
         });
+        console.log(scoreboardRows);
         document.getElementById("scores-elem").innerHTML = scoreboardRows;
 
         if (userData != null) {
-        let hasPlayerJoinedMatch = matchData.scores.some(score => score.player.nickname === userData.nickname);
+          let hasPlayerJoinedMatch = matchData.scores.some(score => score.player.nickname === userData.nickname);
 
-        if (!hasPlayerJoinedMatch) {
-          document.getElementById("join-placeholder-elem").innerHTML =
-              "<button class=\"ui basic right floated icon button\" id=\"join-game-button\">" +
-              "<i class=\"sign in alternate icon\"></i>" +
-              "</button>";
+          if (!hasPlayerJoinedMatch) {
+            document.getElementById("join-placeholder-elem").innerHTML =
+                "<button class=\"ui basic right floated icon button\" id=\"join-game-button\">" +
+                "<i class=\"sign in alternate icon\"></i>" +
+                "</button>";
 
-        let joinRequest = {"matchId": matchId};
+            let joinRequest = {"matchId": matchId};
 
-        document
-          .getElementById("join-game-button")
-          .addEventListener("click", function () {
-            fetch("/api/v1/scores", {
-              method: "POST",
-              headers: {
-                  "Content-Type": "application/json"
-              },
-              body: JSON.stringify(joinRequest)
-            })
-              .then(response => {
-                if (!response.ok) {
-                  throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/scores::post ' + response.statusText);
-                }
-                return response.json();
-              })
-              .then(scoreData => {
-                refreshScoreboard();
+            document
+              .getElementById("join-game-button")
+              .addEventListener("click", function () {
+                fetch("/api/v1/scores", {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify(joinRequest)
+                })
+                  .then(response => {
+                    if (!response.ok) {
+                      throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/scores::post ' + response.statusText);
+                    }
+                    return response.json();
+                  })
+                  .then(scoreData => {
+                    refreshScoreboard();
+                  });
               });
-          });
         }
-
-
-        }
+      }
       });
   </script>
 </body>
