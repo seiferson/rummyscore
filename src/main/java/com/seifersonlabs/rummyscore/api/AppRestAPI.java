@@ -16,10 +16,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
-import java.util.Date;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static com.seifersonlabs.rummyscore.util.Constants.AVATAR_ATTRS;
 import static com.seifersonlabs.rummyscore.util.Constants.DICEBEAR_URL;
@@ -27,6 +24,8 @@ import static com.seifersonlabs.rummyscore.util.Constants.DICEBEAR_URL;
 @RestController
 @RequestMapping("/api/v1")
 public class AppRestAPI {
+
+    private Random gen = new Random();
 
     @Autowired
     private PlayerRepo playerRepo;
@@ -105,7 +104,7 @@ public class AppRestAPI {
             } else {
                 Player newPlayer = new Player();
                 newPlayer.setEmail(principal.getAttribute("email"));
-                newPlayer.setNickname(principal.getAttribute("email").toString().substring(0, 5));
+                newPlayer.setNickname(principal.getAttribute("email").toString().substring(0, 3) + (gen.nextInt(89)+10));
                 newPlayer.setAvatar(DICEBEAR_URL + AVATAR_ATTRS + newPlayer.getNickname());
                 newPlayer = playerRepo.save(newPlayer);
                 return ResponseEntity.ok(newPlayer);
