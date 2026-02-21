@@ -124,6 +124,12 @@
     let matchId = url.split("/").at(-1);
     let userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
+    function getScoreText(sc) {
+      return sc === null ? "-" : sc === 0 ? "<i class=\"trophy icon\"></i>" : sc;
+    }
+
+
+
     function refreshScoreboard() {
       fetch('/api/v1/matches/' + matchId)
         .then(response => {
@@ -140,7 +146,7 @@
                 "<td>" +
                 "<a href=\"/players/" + score.player.nickname + "\" >@ " + score.player.nickname + "</a>" +
                 "</td>" +
-                "<td class=\"center aligned\">" + (score.round1Score === null ? "-" : score.round1Score === 0 ? "<i class=\"trophy icon\"></i>" : score.round1Score) + "</td>" +
+                "<td class=\"center aligned\">" + getScoreText(score.round1Score) + "</td>" +
                 "</tr>";
           });
           document.getElementById("scores-elem").innerHTML = scoreboardRows;
@@ -207,9 +213,9 @@
           scoreboardRows +=
               "<tr>" +
               "<td>" +
-              "<a href=\"/players/" + score.player.nickname + "\" >@ " + score.player.nickname + "</a>" +
+              "<a href=\"/players/" + score.player.nickname + "\" >@" + score.player.nickname + "</a>" +
               "</td>" +
-              "<td class=\"center aligned\">" + "-" + "</td>" +
+              "<td class=\"center aligned\">" + getScoreText(score.round1Score) + "</td>" +
               "</tr>";
         });
         console.log(scoreboardRows);
