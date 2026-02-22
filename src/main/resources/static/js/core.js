@@ -137,9 +137,28 @@ function checkAuth() {
     return fetch('/api/v1/authx/getuserinfo')
         .then(response => {
             if (!response.ok) {
-                return null;
+                throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/authx/getuserinfo ' + response.statusText);
             }
             return response.json();
+        })
+        .then(userData => {
+            const loginAvatar = document.getElementById('login-avatar-elem');
+
+            const userAvatarLink = document.createElement("a");
+            userAvatarLink.href = "/players/" + userData.nickname;
+
+            const userAvatarImg = document.createElement("img");
+            userAvatarImg.classList.add("ui", "avatar");
+            userAvatarImg.src = userData.avatar;
+
+            const userNickname = document.createTextNode("@" + userData.nickname);
+
+            loginAvatar.appendChild(userAvatarLink);
+            userAvatarLink.appendChild(userAvatarImg);
+            userAvatarLink.appendChild(userNickname);
+        })
+        .catch(error => {
+            console.error(error);
         });
 }
 
@@ -176,20 +195,7 @@ function drawIndex() {
     Promise.all([authResult])
         .then(userData => {
             if(userData != null) {
-                const loginAvatar = document.getElementById('login-avatar-elem');
 
-                const userAvatarLink = document.createElement("a");
-                userAvatarLink.href = "/players/" + userData.nickname;
-
-                const userAvatarImg = document.createElement("img");
-                userAvatarImg.classList.add("ui", "avatar");
-                userAvatarImg.src = userData.avatar;
-
-                const userNickname = document.createTextNode("@" + userData.nickname);
-
-                loginAvatar.appendChild(userAvatarLink);
-                userAvatarLink.appendChild(userAvatarImg);
-                userAvatarLink.appendChild(userNickname);
             } else {
                 const loginLink = document.createElement("a");
                 loginLink.href="/oauth2/authorization/google";
