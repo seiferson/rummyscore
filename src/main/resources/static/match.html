@@ -39,30 +39,7 @@
 
     <div class="ui stackable grid">
       <div class="row">
-        <div class="five wide column">
-          <div class="ui centered card">
-            <div class="content">
-              <div class="header"><i class="dice one icon"></i> round 1 </div>
-              <div class="meta">
-                <span><i class="circle check outline icon"></i> 3</span>
-              </div>
-              <br />
-              <div class="ui label"><i class="dice two icon"></i> A♥ A♦ A♣</div>
-              <div class="ui label"><i class="dice one icon"></i> 8♥ 9♥ 10♥ J♥</div>
-              <br />
-              <br />
-              <p>
-              <form class="ui form">
-                <div class="fluid field">
-                  <label>your score</label>
-                  <input type="text" size="4" name="score" placeholder="123" />
-                </div>
-                <button class="ui right floated basic icon button" type="submit"><i class="arrow alternate circle up outline icon"></i></button>
-              </form>
-              </p>
-            </div>
-          </div>
-        </div>
+        <div class="five wide column" id="enter-score-elem"></div>
         <div class="eleven wide column">
           <h4 class="ui center aligned icon header">
             <i class="circular dice icon"></i> scoreboard
@@ -265,6 +242,31 @@
                     document.getElementById("join-game-button").remove();
                   });
               });
+        } else {
+          let playerCount = matchData.scores.length;
+          document.getElementById("enter-score-elem").innerHTML =
+              "<div class=\"ui centered card\">\n" +
+              "<div class=\"content\">\n" +
+              "<div class=\"header\"><i class=\"dice " + " icon\"></i>" + "</div>\n" +
+              "<div class=\"meta\">\n" +
+              "<span><i class=\"circle check outline icon\"></i> " + "?/" + playerCount + "</span>\n" +
+              "</div>\n" +
+              "<br />\n" +
+              "<div class=\"ui label\"><i class=\"dice two icon\"></i> A♥ A♦ A♣</div>\n" +
+              "<div class=\"ui label\"><i class=\"dice one icon\"></i> 8♥ 9♥ 10♥ J♥</div>\n" +
+              "<br />\n" +
+              "<br />\n" +
+              "<p>\n" +
+              "<form class=\"ui form\">\n" +
+              "<div class=\"fluid field\">\n" +
+              "<label>your score</label>\n" +
+              "<input type=\"text\" name=\"score\" placeholder=\"123\" />\n" +
+              "</div>\n" +
+              "<button class=\"ui right floated basic icon button\"><i class=\"arrow alternate circle up outline icon\"></i></button>\n" +
+              "</form>\n" +
+              "</p>\n" +
+              "</div>\n" +
+              "</div>"
         }
       }
       });
