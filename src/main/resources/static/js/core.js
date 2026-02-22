@@ -142,26 +142,11 @@ function checkAuth() {
             }
             return response.json();
         })
-        .then(data => {
-            const loginAvatar = document.getElementById('login-avatar-elem');
-            loginAvatar.innerHTML = "";
-
-            const userAvatarLink = document.createElement("a");
-            userAvatarLink.href = "/players/" + data.nickname;
-
-            const userAvatarImg = document.createElement("img");
-            userAvatarImg.classList.add("ui", "avatar");
-            userAvatarImg.src = data.avatar;
-
-            const userNickname = document.createTextNode("@" + data.nickname);
-
-            loginAvatar.appendChild(userAvatarLink);
-            userAvatarLink.appendChild(userAvatarImg);
-            userAvatarLink.appendChild(userNickname);
-        })
         .catch(error => {
             console.error(error);
         });
+
+    return authFetch;
 }
 
 function drawPage() {
@@ -192,7 +177,41 @@ function drawIndex() {
     container.appendChild(document.createElement("br"));
     container.appendChild(document.createElement("br"));
     container.appendChild(indexContent);
-    checkAuth();
+
+    let authResult = checkAuth();
+    Promise.all([authResult])
+        .then(data => {
+            if(userData != null) {
+                const loginAvatar = document.getElementById('login-avatar-elem');
+
+                const userAvatarLink = document.createElement("a");
+                userAvatarLink.href = "/players/" + data.nickname;
+
+                const userAvatarImg = document.createElement("img");
+                userAvatarImg.classList.add("ui", "avatar");
+                userAvatarImg.src = data.avatar;
+
+                const userNickname = document.createTextNode("@" + data.nickname);
+
+                loginAvatar.appendChild(userAvatarLink);
+                userAvatarLink.appendChild(userAvatarImg);
+                userAvatarLink.appendChild(userNickname);
+            } else {
+                const loginLink = document.createElement("a");
+                loginLink.href="/oauth2/authorization/google";
+
+                const googleIcon = document.createElement("i");
+                googleIcon.classList.add("google", "icon");
+
+                const loginLinkText = document.createTextNode(" login");
+
+                const loginAvatar = document.getElementById('login-avatar-elem');
+
+                loginAvatar.appendChild(loginLink);
+                loginLink.appendChild(googleIcon);
+                loginLink.appendChild(loginLinkText);
+            }
+        });
 }
 
 /*
