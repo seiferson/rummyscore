@@ -60,6 +60,7 @@ function getFooterFragment() {
 
     segment.appendChild(divider);
     segment.appendChild(container);
+    divider.appendChild(dividerIcon);
     container.appendChild(column);
     column.appendChild(labels);
     labels.appendChild(githubLink);
