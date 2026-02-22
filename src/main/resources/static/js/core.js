@@ -180,7 +180,7 @@ function drawIndex() {
 
     let authResult = checkAuth();
     Promise.all([authResult])
-        .then(data => {
+        .then(userData => {
             if(userData != null) {
                 const loginAvatar = document.getElementById('login-avatar-elem');
 
