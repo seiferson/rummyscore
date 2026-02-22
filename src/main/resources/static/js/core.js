@@ -166,6 +166,9 @@ function checkAuth() {
             loginAvatar.appendChild(userAvatarLink);
             userAvatarLink.appendChild(userAvatarImg);
             userAvatarLink.appendChild(userNickname);
+        })
+        .catch(error => {
+            console.error(error);
         });
 }
 
