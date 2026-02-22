@@ -24,7 +24,8 @@ public class SecurityConfig {
                                 "/match.html",
                                 "/players/*",
                                 "/matches/*",
-                                "/tournaments/*"
+                                "/tournaments/*",
+                                "/js/*"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
