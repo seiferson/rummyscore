@@ -21,11 +21,19 @@ function getHeaderFragment() {
     userItem.classList.add("ui", "item");
     userItem.id = "login-avatar-elem";
 
+    const avatarPlaceholder = document.createElement("div");
+    avatarPlaceholder.classList.add("ui", "placeholder");
+
+    const placeholderLine = document.createElement("div");
+    placeholderLine.classList.add("very", "short", "line");
+
     parentMenu.appendChild(iconItem);
     parentMenu.appendChild(rightMenu);
     iconItem.appendChild(iconLink);
     iconLink.appendChild(appIcon);
     rightMenu.appendChild(userItem);
+    userItem.appendChild(avatarPlaceholder);
+    avatarPlaceholder.appendChild(placeholderLine);
 
     return parentMenu;
 }
@@ -88,6 +96,79 @@ function getIndexHeader() {
     return segment;
 }
 
+function getIndexContent() {
+    const grid = document.createElement("div");
+    grid.classList.add("ui", "stackable", "grid");
+
+    const row = document.createElement("div");
+    row.classList.add("row");
+
+    const mainColumn = document.createElement("div");
+    mainColumn.classList.add("eleven", "wide", "column");
+
+    const feedHeader = document.createElement("h4");
+    feedHeader.classList.add("ui", "center", "aligned", "icon", "header");
+
+    const feedHeaderIcon = document.createElement("i");
+    feedHeaderIcon.classList.add("circular", "dice", "four", "icon");
+
+    const feedHeaderSpan = document.createElement("span");
+    feedHeaderSpan.classList.add("content");
+
+    const feedHeaderText = document.createTextNode("latest activity");
+
+    const hostPlaceholder = document.createElement("div");
+    hostPlaceholder.id = "host-placeholder-elem";
+
+    const segment = document.createElement("div");
+    segment.classList.add("ui", "segment");
+
+    const feed = document.createElement("div");
+    feed.classList.add("ui", "feed");
+    feed.id = "feed-elem";
+
+    grid.appendChild(row);
+    row.appendChild(mainColumn);
+    mainColumn.appendChild(feedHeader);
+    feedHeader.appendChild(feedHeaderIcon);
+    feedHeader.appendChild(feedHeaderSpan);
+    feedHeaderSpan.appendChild(feedHeaderText);
+    mainColumn.appendChild(hostPlaceholder);
+    mainColumn.appendChild(document.createElement("br"));
+    mainColumn.appendChild(document.createElement("br"));
+    mainColumn.appendChild(segment);
+    segment.appendChild(feed);
+    return grid;
+}
+
+function checkAuth() {
+    let authFetch =
+        fetch('/api/v1/authx/getuserinfo')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('[ERROR] rummyscore::index.html::fetch::/api/v1/authx/getuserinfo ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const loginAvatar = document.getElementById('login-avatar-elem');
+            loginAvatar.innerHTML = "";
+
+            const userAvatarLink = document.createElement("a");
+            userAvatarLink.href = "/players/" + data.nickname;
+
+            const userAvatarImg = document.createElement("img");
+            userAvatarImg.classList.add("ui", "avatar");
+            userAvatarImg.src = data.avatar;
+
+            const userNickname = document.createTextNode("@" + data.nickname);
+
+            loginAvatar.appendChild(userAvatarLink);
+            userAvatarLink.appendChild(userAvatarImg);
+            userAvatarLink.appendChild(userNickname);
+        });
+}
+
 function drawPage() {
     const app = document.getElementById("app-elem");
     const container = document.createElement("div");
@@ -106,6 +187,7 @@ function drawPage() {
 function drawIndex() {
     const container = document.getElementById("container-elem");
     const indexHeader = getIndexHeader();
+    const indexContent = getIndexContent();
 
     container.appendChild(document.createElement("br"));
     container.appendChild(document.createElement("br"));
@@ -114,7 +196,8 @@ function drawIndex() {
     container.appendChild(document.createElement("br"));
     container.appendChild(document.createElement("br"));
     container.appendChild(document.createElement("br"));
-
+    container.appendChild(indexContent);
+    checkAuth();
 }
 
 /*
