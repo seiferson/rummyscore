@@ -134,19 +134,14 @@ function getIndexContent() {
 }
 
 function checkAuth() {
-    let authFetch =
-        fetch('/api/v1/authx/getuserinfo')
+    return fetch('/api/v1/authx/getuserinfo')
         .then(response => {
             if (!response.ok) {
-                throw new Error('[ERROR] rummyscore::index.html::fetch::/api/v1/authx/getuserinfo ' + response.statusText);
+                console.error('[ERROR] rummyscore::index.html::fetch::/api/v1/authx/getuserinfo ' + response.statusText);
+                return null;
             }
             return response.json();
-        })
-        .catch(error => {
-            console.error(error);
         });
-
-    return authFetch;
 }
 
 function drawPage() {
