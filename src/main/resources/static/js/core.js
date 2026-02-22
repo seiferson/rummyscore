@@ -21,19 +21,11 @@ function getHeaderFragment() {
     userItem.classList.add("ui", "item");
     userItem.id = "login-avatar-elem";
 
-    const avatarPlaceholder = document.createElement("div");
-    avatarPlaceholder.classList.add("ui", "placeholder");
-
-    const placeholderLine = document.createElement("div");
-    placeholderLine.classList.add("very", "short", "line");
-
     parentMenu.appendChild(iconItem);
     parentMenu.appendChild(rightMenu);
     iconItem.appendChild(iconLink);
     iconLink.appendChild(appIcon);
     rightMenu.appendChild(userItem);
-    userItem.appendChild(avatarPlaceholder);
-    avatarPlaceholder.appendChild(placeholderLine);
 
     return parentMenu;
 }
