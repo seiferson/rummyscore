@@ -70,6 +70,24 @@ function getFooterFragment() {
     return segment;
 }
 
+function getIndexHeader() {
+    const segment = document.createElement("div");
+    segment.classList.add("ui", "segment");
+
+    const iconHeader = document.createElement("h2");
+    iconHeader.classList.add("ui", "center", "aligned", "icon", "header");
+
+    const icon = document.createElement("i");
+    icon.classList.add("circular", "mountain", "icon");
+
+    const headerText = document.createTextNode("rummyscore");
+
+    segment.appendChild(iconHeader);
+    iconHeader.appendChild(icon);
+    iconHeader.appendChild(headerText);
+    return segment;
+}
+
 function drawPage() {
     const app = document.getElementById("app-elem");
     const container = document.createElement("div");
@@ -85,20 +103,21 @@ function drawPage() {
     app.appendChild(footerFragment);
 }
 
-/*
-"<div class=\"ui basic segment\">\n" +
-"    <div class=\"ui horizontal divider\"><i class=\"mountain icon\"></i></div>\n" +
-"    <div class=\"ui container\">\n" +
-"      <div class=\"ten wide column\">\n" +
-"        <div class=\"ui labels\">\n" +
-"          <a class=\"ui label\" href=\"\">\n" +
-"            <i class=\"github icon\"></i>github\n" +
-"          </a>\n" +
-"        </div>\n" +
-"      </div>\n" +
-"    </div>\n" +
-"  </div>"
+function drawIndex() {
+    const container = document.getElementById("container-elem");
+    const indexHeader = getIndexHeader();
 
+    container.appendChild(document.createElement("br"));
+    container.appendChild(document.createElement("br"));
+    container.appendChild(document.createElement("br"));
+    container.appendChild(indexHeader);
+    container.appendChild(document.createElement("br"));
+    container.appendChild(document.createElement("br"));
+    container.appendChild(document.createElement("br"));
+
+}
+
+/*
 "<div class=\"ui top attached menu\">\n" +
 "    <div class=\"ui item\">\n" +
 "      <a class=\"ui header\" href=\"/\"><i class=\"mountain icon\"></i></a>\n" +
