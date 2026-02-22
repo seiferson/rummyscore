@@ -134,7 +134,7 @@ function getIndexContent() {
 }
 
 function checkAuth() {
-    return fetch('/api/v1/authx/getuserinfo')
+    fetch('/api/v1/authx/getuserinfo')
         .then(response => {
             if (!response.ok) {
                 throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/authx/getuserinfo ' + response.statusText);
@@ -158,7 +158,19 @@ function checkAuth() {
             userAvatarLink.appendChild(userNickname);
         })
         .catch(error => {
-            console.error(error);
+            const loginLink = document.createElement("a");
+            loginLink.href="/oauth2/authorization/google";
+
+            const googleIcon = document.createElement("i");
+            googleIcon.classList.add("google", "icon");
+
+            const loginLinkText = document.createTextNode(" login");
+
+            const loginAvatar = document.getElementById('login-avatar-elem');
+
+            loginAvatar.appendChild(loginLink);
+            loginLink.appendChild(googleIcon);
+            loginLink.appendChild(loginLinkText);
         });
 }
 
@@ -191,27 +203,7 @@ function drawIndex() {
     container.appendChild(document.createElement("br"));
     container.appendChild(indexContent);
 
-    let authResult = checkAuth();
-    Promise.all([authResult])
-        .then(userData => {
-            if(userData != null) {
-
-            } else {
-                const loginLink = document.createElement("a");
-                loginLink.href="/oauth2/authorization/google";
-
-                const googleIcon = document.createElement("i");
-                googleIcon.classList.add("google", "icon");
-
-                const loginLinkText = document.createTextNode(" login");
-
-                const loginAvatar = document.getElementById('login-avatar-elem');
-
-                loginAvatar.appendChild(loginLink);
-                loginLink.appendChild(googleIcon);
-                loginLink.appendChild(loginLinkText);
-            }
-        });
+    checkAuth();
 }
 
 /*
