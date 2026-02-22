@@ -137,7 +137,6 @@ function checkAuth() {
     return fetch('/api/v1/authx/getuserinfo')
         .then(response => {
             if (!response.ok) {
-                console.error('[ERROR] rummyscore::index.html::fetch::/api/v1/authx/getuserinfo ' + response.statusText);
                 return null;
             }
             return response.json();
