@@ -185,13 +185,13 @@ function drawIndex() {
                 const loginAvatar = document.getElementById('login-avatar-elem');
 
                 const userAvatarLink = document.createElement("a");
-                userAvatarLink.href = "/players/" + data.nickname;
+                userAvatarLink.href = "/players/" + userData.nickname;
 
                 const userAvatarImg = document.createElement("img");
                 userAvatarImg.classList.add("ui", "avatar");
-                userAvatarImg.src = data.avatar;
+                userAvatarImg.src = userData.avatar;
 
-                const userNickname = document.createTextNode("@" + data.nickname);
+                const userNickname = document.createTextNode("@" + userData.nickname);
 
                 loginAvatar.appendChild(userAvatarLink);
                 userAvatarLink.appendChild(userAvatarImg);
