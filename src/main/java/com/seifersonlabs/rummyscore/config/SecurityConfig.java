@@ -19,12 +19,13 @@ public class SecurityConfig {
                                 "/api/v1/authx/getuserinfo",
                                 "/error",
                                 "/api/v1/matches",
+                                "/api/v1/matches/**",
                                 "/profile.html",
                                 "/tournament.html",
                                 "/match.html",
-                                "/players/*",
-                                "/matches/*",
-                                "/tournaments/*",
+                                "/players/**",
+                                "/matches/**",
+                                "/tournaments/**",
                                 "/js/*"
                         ).permitAll()
                         .anyRequest().authenticated()
