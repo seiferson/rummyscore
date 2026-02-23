@@ -1,4 +1,4 @@
-
+const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 function getHeaderFragment() {
     const parentMenu = document.createElement("div");
@@ -586,7 +586,6 @@ function getScoreContent(score) {
 }
 
 function formatDate(date) {
-    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const dateObj = new Date(date);
 
     return dateObj.toLocaleString('en-US', {
