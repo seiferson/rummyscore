@@ -212,7 +212,7 @@ function drawIndex() {
 
 function loadIndexData(userData) {
     if(userData != null) {
-        const hostButtonHolder = document.getElementById("host-placeholder-elem");
+        const hostButtonPlaceholder = document.getElementById("host-placeholder-elem");
 
         const hostButton = document.createElement("button");
         hostButton.classList.add("ui", "basic", "right", "floated", "icon", "button");
@@ -222,6 +222,7 @@ function loadIndexData(userData) {
         buttonIcon.classList.add("plus", "icon");
 
         hostButton.appendChild(buttonIcon);
+        hostButtonPlaceholder.appendChild(hostButton);
 
         hostButton
             .addEventListener("click", function () {
@@ -239,6 +240,8 @@ function loadIndexData(userData) {
                     console.log(error);
                 });
         });
+
+        loadEventFeedData();
 
     } else {
         loadEventFeedData();
