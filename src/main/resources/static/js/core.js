@@ -211,7 +211,7 @@ function drawIndex() {
 }
 
 function loadIndexData(userData) {
-    if(userData != null) {
+    if(userData !== null) {
         const hostButtonPlaceholder = document.getElementById("host-placeholder-elem");
 
         const hostButton = document.createElement("button");
@@ -240,12 +240,9 @@ function loadIndexData(userData) {
                     console.log(error);
                 });
         });
-
-        loadEventFeedData();
-
-    } else {
-        loadEventFeedData();
     }
+
+    loadEventFeedData();
 }
 
 function loadEventFeedData() {
@@ -464,7 +461,7 @@ function loadMatchData(userData) {
 
             renderMatchScores(matchData);
 
-            if(userData != null) {
+            if(userData !== null) {
                 const hasPlayerJoinedMatch = matchData.scores.some(score => score.player.nickname === userData.nickname);
                 if (!hasPlayerJoinedMatch) {
                     const joinButtonPlaceholder = document.getElementById("join-placeholder-elem");
