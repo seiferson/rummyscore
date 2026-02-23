@@ -210,7 +210,7 @@ function drawIndex() {
     checkAuth();
 }
 
-function loadIndexdata(userData) {
+function loadIndexData(userData) {
     if(userData != null) {
         const hostButtonHolder = document.getElementById("host-placeholder-elem");
 
