@@ -421,6 +421,52 @@ function getMatchContent() {
     return grid;
 }
 
+function getContractSets(round) {
+    if(round === 1) {
+        return 2;
+    } else if(round === 2) {
+        return 1;
+    } else if(round === 3) {
+        return 0;
+    } else if(round === 4) {
+        return 3;
+    } else if(round === 5) {
+        return 2;
+    } else if(round === 6) {
+        return 1;
+    } else if(round === 7) {
+        return 0;
+    }
+}
+
+function getContractRuns(round) {
+    if(round === 1) {
+        return 0;
+    } else if(round === 2) {
+        return 1;
+    } else if(round === 3) {
+        return 2;
+    } else if(round === 4) {
+        return 0;
+    } else if(round === 5) {
+        return 1;
+    } else if(round === 6) {
+        return 2;
+    } else if(round === 7) {
+        return 3;
+    }
+}
+
+function getNumberText(number) {
+    if(number === 1) {
+        return "one";
+    } else if(number === 2) {
+        return "two";
+    } else {
+        return "three";
+    }
+}
+
 function loadMatchData(userData) {
     const url = window.location.pathname;
     const matchId = url.split("/").at(-1);
@@ -520,17 +566,19 @@ function loadMatchData(userData) {
                     const playerCountIcon = document.createElement("i");
                     playerCountIcon.classList.add("circle", "check", "outline", "icon");
 
-                    const contract1Label = document.createElement("div");
-                    contract1Label.classList.add("ui", "label");
+                    const sets = getContractSets(matchData.currentRound);
+                    const setsLabel = document.createElement("div");
+                    setsLabel.classList.add("ui", "label");
 
-                    const contract1Icon = document.createElement("i");
-                    contract1Icon.classList.add("dice", "two", "icon");
+                    const setsIcon = document.createElement("i");
+                    setsIcon.classList.add("dice", getNumberText(sets), "icon");
 
-                    const contract2Label = document.createElement("div");
-                    contract2Label.classList.add("ui", "label");
+                    const runs = getContractRuns(matchData.currentRound);
+                    const runsLabel = document.createElement("div");
+                    runsLabel.classList.add("ui", "label");
 
-                    const contract2Icon = document.createElement("i");
-                    contract2Icon.classList.add("dice", "one", "icon");
+                    const runsIcon = document.createElement("i");
+                    runsIcon.classList.add("dice", getNumberText(runs), "icon");
 
                     const p = document.createElement("p");
                     const form = document.createElement("form");
@@ -561,12 +609,19 @@ function loadMatchData(userData) {
                     metaSpan.appendChild(playerCountIcon);
                     metaSpan.appendChild(document.createTextNode("?/" + playerCount));
                     cardContent.appendChild(document.createElement("br"));
-                    contract1Label.appendChild(contract1Icon);
-                    contract1Label.appendChild(document.createTextNode(" A♥ A♦ A♣"));
-                    cardContent.appendChild(contract1Label);
-                    contract2Label.appendChild(contract2Icon);
-                    contract2Label.appendChild(document.createTextNode(" 8♥ 9♥ 10♥ J♥"));
-                    cardContent.appendChild(contract2Label);
+
+                    if(sets > 0) {
+                        setsLabel.appendChild(setsIcon);
+                        setsLabel.appendChild(document.createTextNode(" A♥ A♦ A♣"));
+                        cardContent.appendChild(setsLabel);
+                    }
+
+                    if(runs > 0) {
+                        runsLabel.appendChild(runsIcon);
+                        runsLabel.appendChild(document.createTextNode(" 8♥ 9♥ 10♥ J♥"));
+                        cardContent.appendChild(runsLabel);
+                    }
+
                     cardContent.appendChild(document.createElement("br"));
                     cardContent.appendChild(document.createElement("br"));
                     cardContent.appendChild(p);
