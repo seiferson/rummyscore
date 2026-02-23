@@ -311,7 +311,7 @@ function loadEventFeedData() {
                 metaSpan.appendChild(document.createTextNode(" " + eventData.scores.length));
             });
 
-            if(data.scores.length === 0) {
+            if(data.content.length === 0) {
                 document.getElementById("feed-elem").innerHTML = "<div class=\"event\">" +
                     "<div class=\"label\">" +
                     "<img src=\"https://api.dicebear.com/9.x/notionists-neutral/svg?seed=doom\" alt=\"user avatar\">" +
