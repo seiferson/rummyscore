@@ -312,6 +312,8 @@ function loadEventFeedData() {
                 eventMeta.appendChild(metaSpan);
                 metaSpan.appendChild(userIcon);
                 metaSpan.appendChild(document.createTextNode(" " + eventData.scores.length));
+
+                feed.appendChild(event);
             });
 
             if(data.content.length === 0) {
