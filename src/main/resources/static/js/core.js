@@ -260,7 +260,7 @@ function loadEventFeedData() {
             const feed = document.getElementById("feed-elem");
             feed.innerHTML = "";
 
-            data.content.forEach(function(eventData) {
+            data.content.forEach(eventData => {
                 const formattedEventDate = formatDate(eventData.startDate);
 
                 const event = document.createElement("div");
@@ -538,7 +538,7 @@ function loadMatchData(userData) {
 function renderMatchScores(matchData) {
     const scoreboardTableBody = document.getElementById("scores-elem");
     scoreboardTableBody.innerHTML = "";
-    matchData.scores.forEach(function(score){
+    matchData.scores.forEach(score => {
         let scoreRow = document.createElement("tr");
 
         let scorePlayer = document.createElement("td");
