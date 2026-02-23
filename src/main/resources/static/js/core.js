@@ -286,7 +286,7 @@ function loadEventFeedData() {
                 eventHost.classList.add("user");
 
                 const eventId = document.createElement("a");
-                eventId.href = "/matches/" + event.id;
+                eventId.href = "/matches/" + eventData.id;
 
                 const eventMeta = document.createElement("div");
                 eventMeta.classList.add("meta");
@@ -305,8 +305,8 @@ function loadEventFeedData() {
                 eventSummary.appendChild(eventHost);
                 eventSummary.appendChild(document.createTextNode(" is hosting "));
                 eventSummary.appendChild(eventId);
-                eventId.appendChild(document.createTextNode("#" + event.id.substring(0, 5)))
-                eventHost.appendChild(document.createTextNode("@" + event.host.nickname));
+                eventId.appendChild(document.createTextNode("#" + eventData.id.substring(0, 5)))
+                eventHost.appendChild(document.createTextNode("@" + eventData.host.nickname));
                 eventContentDate.appendChild(document.createTextNode(formattedEventDate));
                 eventContent.appendChild(eventMeta);
                 eventMeta.appendChild(metaSpan);
