@@ -133,7 +133,7 @@ function getIndexContent() {
     return grid;
 }
 
-function checkAuth() {
+function checkAuthAndLoadPage() {
     fetch('/api/v1/authx/getuserinfo')
         .then(response => {
             if (!response.ok) {
@@ -207,7 +207,7 @@ function drawIndex() {
     container.appendChild(document.createElement("br"));
     container.appendChild(indexContent);
 
-    checkAuth();
+    checkAuthAndLoadPage();
 }
 
 function loadIndexData(userData) {
@@ -348,7 +348,7 @@ function drawMatch() {
     container.appendChild(document.createElement("br"));
     container.appendChild(matchContent);
 
-    checkAuth();
+    checkAuthAndLoadPage();
 }
 
 function getMatchHeader() {
