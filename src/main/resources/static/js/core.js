@@ -418,7 +418,7 @@ function getMatchContent() {
     scoreboardTableHeaderRow.appendChild(scoreboardTableUser);
 
     for (let i = 1; i < 8; i++) {
-        let roundHeader = document.createElement("th");
+        const roundHeader = document.createElement("th");
         roundHeader.classList.add("center", "aligned");
         roundHeader.appendChild(document.createTextNode("r" + i));
         scoreboardTableHeaderRow.appendChild(roundHeader);
@@ -428,8 +428,8 @@ function getMatchContent() {
 }
 
 function loadMatchData(userData) {
-    let url = window.location.pathname;
-    let matchId = url.split("/").at(-1);
+    const url = window.location.pathname;
+    const matchId = url.split("/").at(-1);
 
     fetch('/api/v1/matches/' + matchId)
         .then(response => {
@@ -465,7 +465,7 @@ function loadMatchData(userData) {
             renderMatchScores(matchData);
 
             if(userData != null) {
-                let hasPlayerJoinedMatch = matchData.scores.some(score => score.player.nickname === userData.nickname);
+                const hasPlayerJoinedMatch = matchData.scores.some(score => score.player.nickname === userData.nickname);
                 if (!hasPlayerJoinedMatch) {
                     const joinButtonPlaceholder = document.getElementById("join-placeholder-elem");
                     const joinButton = document.createElement("button");
@@ -478,7 +478,7 @@ function loadMatchData(userData) {
                     joinButton.appendChild(joinIcon);
                     joinButtonPlaceholder.appendChild(joinButton);
 
-                    let joinRequest = {"matchId": matchId};
+                    const joinRequest = {"matchId": matchId};
 
                     joinButton.addEventListener("click", function () {
                         fetch("/api/v1/scores", {
@@ -503,7 +503,7 @@ function loadMatchData(userData) {
                             });
                         });
                 } else if(matchData.endDate === null) {
-                    let playerCount = matchData.scores.length;
+                    const playerCount = matchData.scores.length;
                     document.getElementById("enter-score-elem").innerHTML =
                         "<div class=\"ui centered card\">\n" +
                         "<div class=\"content\">\n" +
@@ -539,10 +539,10 @@ function renderMatchScores(matchData) {
     const scoreboardTableBody = document.getElementById("scores-elem");
     scoreboardTableBody.innerHTML = "";
     matchData.scores.forEach(score => {
-        let scoreRow = document.createElement("tr");
+        const scoreRow = document.createElement("tr");
 
-        let scorePlayer = document.createElement("td");
-        let scorePlayerLink = document.createElement("a");
+        const scorePlayer = document.createElement("td");
+        const scorePlayerLink = document.createElement("a");
         scorePlayerLink.href = "/players/" + score.player.nickname;
         scorePlayerLink.appendChild(document.createTextNode("@" + score.player.nickname));
         scorePlayer.appendChild(scorePlayerLink);
