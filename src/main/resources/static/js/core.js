@@ -148,7 +148,7 @@ function checkAuth() {
             userAvatarLink.href = "/players/" + userData.nickname;
 
             const userAvatarImg = document.createElement("img");
-            userAvatarImg.classList.add("ui", "avatar");
+            userAvatarImg.classList.add("ui", "avatar", "image");
             userAvatarImg.src = userData.avatar;
 
             const userNickname = document.createTextNode("@" + userData.nickname);
