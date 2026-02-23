@@ -546,43 +546,14 @@ function renderMatchScores(matchData) {
         scorePlayerLink.href = "/players/" + score.player.nickname;
         scorePlayerLink.appendChild(document.createTextNode("@" + score.player.nickname));
         scorePlayer.appendChild(scorePlayerLink);
-
-        let round1 = document.createElement("td");
-        round1.classList.add("center", "aligned");
-        round1.appendChild(getScoreContent(score.round1Score));
-
-        let round2 = document.createElement("td");
-        round2.classList.add("center", "aligned");
-        round2.appendChild(getScoreContent(score.round2Score));
-
-        let round3 = document.createElement("td");
-        round3.classList.add("center", "aligned");
-        round3.appendChild(getScoreContent(score.round3Score));
-
-        let round4 = document.createElement("td");
-        round4.classList.add("center", "aligned");
-        round4.appendChild(getScoreContent(score.round4Score));
-
-        let round5 = document.createElement("td");
-        round5.classList.add("center", "aligned");
-        round5.appendChild(getScoreContent(score.round5Score));
-
-        let round6 = document.createElement("td");
-        round6.classList.add("center", "aligned");
-        round6.appendChild(getScoreContent(score.round6Score));
-
-        let round7 = document.createElement("td");
-        round7.classList.add("center", "aligned");
-        round7.appendChild(getScoreContent(score.round7Score));
-
         scoreRow.appendChild(scorePlayer);
-        scoreRow.appendChild(round1);
-        scoreRow.appendChild(round2);
-        scoreRow.appendChild(round3);
-        scoreRow.appendChild(round4);
-        scoreRow.appendChild(round5);
-        scoreRow.appendChild(round6);
-        scoreRow.appendChild(round7);
+
+        for (let i = 1; i <= 7; i++) {
+            const roundTd = document.createElement("td");
+            roundTd.classList.add("center", "aligned");
+            roundTd.appendChild(getScoreContent(score[`round${i}Score`]));
+            scoreRow.appendChild(roundTd);
+        }
 
         scoreboardTableBody.appendChild(scoreRow);
     });
