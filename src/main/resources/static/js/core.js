@@ -488,6 +488,104 @@ function getUserScoreForCurrentRound(matchData, userData) {
     return null;
 }
 
+function loadRegisterScoreCard(matchData, userData) {
+    if(matchData.endDate === null && getUserScoreForCurrentRound(matchData, userData) === null) {
+        const playerCount = matchData.scores.length;
+        const enterScorePlaceholder = document.getElementById("enter-score-elem");
+
+        const card = document.createElement("div");
+        card.classList.add("ui", "centered", "card");
+
+        const cardContent = document.createElement("div");
+        cardContent.classList.add("content");
+
+        const contentHeader = document.createElement("div");
+        contentHeader.classList.add("header");
+
+        const headerIcon = document.createElement("i");
+        headerIcon.classList.add("dice", "icon");
+
+        const contentMeta = document.createElement("div");
+        contentMeta.classList.add("meta");
+
+        const metaSpan = document.createElement("span");
+
+        const playerCountIcon = document.createElement("i");
+        playerCountIcon.classList.add("circle", "check", "outline", "icon");
+
+        const sets = getContractSets(matchData.currentRound);
+        const setsLabel = document.createElement("div");
+        setsLabel.classList.add("ui", "label");
+
+        const setsIcon = document.createElement("i");
+        setsIcon.classList.add("dice", getNumberText(sets), "icon");
+
+        const runs = getContractRuns(matchData.currentRound);
+        const runsLabel = document.createElement("div");
+        runsLabel.classList.add("ui", "label");
+
+        const runsIcon = document.createElement("i");
+        runsIcon.classList.add("dice", getNumberText(runs), "icon");
+
+        const p = document.createElement("p");
+        const form = document.createElement("form");
+        form.classList.add("ui", "form");
+
+        const field = document.createElement("div");
+        field.classList.add("fluid", "field");
+
+        const fieldLabel = document.createElement("label");
+        const fieldInput = document.createElement("input");
+        fieldInput.type = "text";
+        fieldInput.name = "score";
+        fieldInput.placeholder = "123";
+
+        const submitButton = document.createElement("button");
+        submitButton.classList.add("ui", "right", "floated", "basic", "icon", "button");
+
+        const submitIcon = document.createElement("i");
+        submitIcon.classList.add("arrow", "alternate", "circle", "up", "outline", "icon");
+
+        enterScorePlaceholder.appendChild(card);
+        card.appendChild(cardContent);
+        cardContent.appendChild(contentHeader);
+        contentHeader.appendChild(headerIcon);
+        contentHeader.appendChild(document.createTextNode(" round " + matchData.currentRound));
+        cardContent.appendChild(contentMeta);
+        contentMeta.appendChild(metaSpan);
+        metaSpan.appendChild(playerCountIcon);
+        metaSpan.appendChild(
+            document.createTextNode(
+                getPlayerCompletion(matchData.scores, matchData.currentRound) + "/" + playerCount
+            )
+        );
+        cardContent.appendChild(document.createElement("br"));
+
+        if(sets > 0) {
+            setsLabel.appendChild(setsIcon);
+            setsLabel.appendChild(document.createTextNode(" A♥ A♦ A♣"));
+            cardContent.appendChild(setsLabel);
+        }
+
+        if(runs > 0) {
+            runsLabel.appendChild(runsIcon);
+            runsLabel.appendChild(document.createTextNode(" 8♥ 9♥ 10♥ J♥"));
+            cardContent.appendChild(runsLabel);
+        }
+
+        cardContent.appendChild(document.createElement("br"));
+        cardContent.appendChild(document.createElement("br"));
+        cardContent.appendChild(p);
+        p.appendChild(form);
+        form.appendChild(field);
+        fieldLabel.appendChild(document.createTextNode("your score"));
+        field.appendChild(fieldLabel);
+        field.appendChild(fieldInput);
+        submitButton.appendChild(submitIcon);
+        form.appendChild(submitButton);
+    }
+}
+
 function loadMatchData(userData) {
     const url = window.location.pathname;
     const matchId = url.split("/").at(-1);
@@ -556,108 +654,16 @@ function loadMatchData(userData) {
                                 return response.json();
                             })
                             .then(scoreData => {
-                                document.getElementById("app-elem").innerHTML = "";
-                                drawPage();
-                                drawMatch();
+                                loadMatchScores(matchId);
+                                loadRegisterScoreCard(matchData, userData);
+                                document.getElementById("join-game-elem").remove();
                             })
                             .catch(error => {
                                 console.log(error);
                             });
                         });
-                } else if(matchData.endDate === null && getUserScoreForCurrentRound(matchData, userData) === null) {
-                    const playerCount = matchData.scores.length;
-                    const enterScorePlaceholder = document.getElementById("enter-score-elem");
-
-                    const card = document.createElement("div");
-                    card.classList.add("ui", "centered", "card");
-
-                    const cardContent = document.createElement("div");
-                    cardContent.classList.add("content");
-
-                    const contentHeader = document.createElement("div");
-                    contentHeader.classList.add("header");
-
-                    const headerIcon = document.createElement("i");
-                    headerIcon.classList.add("dice", "icon");
-
-                    const contentMeta = document.createElement("div");
-                    contentMeta.classList.add("meta");
-
-                    const metaSpan = document.createElement("span");
-
-                    const playerCountIcon = document.createElement("i");
-                    playerCountIcon.classList.add("circle", "check", "outline", "icon");
-
-                    const sets = getContractSets(matchData.currentRound);
-                    const setsLabel = document.createElement("div");
-                    setsLabel.classList.add("ui", "label");
-
-                    const setsIcon = document.createElement("i");
-                    setsIcon.classList.add("dice", getNumberText(sets), "icon");
-
-                    const runs = getContractRuns(matchData.currentRound);
-                    const runsLabel = document.createElement("div");
-                    runsLabel.classList.add("ui", "label");
-
-                    const runsIcon = document.createElement("i");
-                    runsIcon.classList.add("dice", getNumberText(runs), "icon");
-
-                    const p = document.createElement("p");
-                    const form = document.createElement("form");
-                    form.classList.add("ui", "form");
-
-                    const field = document.createElement("div");
-                    field.classList.add("fluid", "field");
-
-                    const fieldLabel = document.createElement("label");
-                    const fieldInput = document.createElement("input");
-                    fieldInput.type = "text";
-                    fieldInput.name = "score";
-                    fieldInput.placeholder = "123";
-
-                    const submitButton = document.createElement("button");
-                    submitButton.classList.add("ui", "right", "floated", "basic", "icon", "button");
-
-                    const submitIcon = document.createElement("i");
-                    submitIcon.classList.add("arrow", "alternate", "circle", "up", "outline", "icon");
-
-                    enterScorePlaceholder.appendChild(card);
-                    card.appendChild(cardContent);
-                    cardContent.appendChild(contentHeader);
-                    contentHeader.appendChild(headerIcon);
-                    contentHeader.appendChild(document.createTextNode(" round " + matchData.currentRound));
-                    cardContent.appendChild(contentMeta);
-                    contentMeta.appendChild(metaSpan);
-                    metaSpan.appendChild(playerCountIcon);
-                    metaSpan.appendChild(
-                        document.createTextNode(
-                            getPlayerCompletion(matchData.scores, matchData.currentRound) + "/" + playerCount
-                        )
-                    );
-                    cardContent.appendChild(document.createElement("br"));
-
-                    if(sets > 0) {
-                        setsLabel.appendChild(setsIcon);
-                        setsLabel.appendChild(document.createTextNode(" A♥ A♦ A♣"));
-                        cardContent.appendChild(setsLabel);
-                    }
-
-                    if(runs > 0) {
-                        runsLabel.appendChild(runsIcon);
-                        runsLabel.appendChild(document.createTextNode(" 8♥ 9♥ 10♥ J♥"));
-                        cardContent.appendChild(runsLabel);
-                    }
-
-                    cardContent.appendChild(document.createElement("br"));
-                    cardContent.appendChild(document.createElement("br"));
-                    cardContent.appendChild(p);
-                    p.appendChild(form);
-                    form.appendChild(field);
-                    fieldLabel.appendChild(document.createTextNode("your score"));
-                    field.appendChild(fieldLabel);
-                    field.appendChild(fieldInput);
-                    submitButton.appendChild(submitIcon);
-                    form.appendChild(submitButton);
+                } else {
+                    loadRegisterScoreCard(matchData, userData);
                 }
             }
         })
