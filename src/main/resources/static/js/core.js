@@ -137,7 +137,7 @@ function checkAuth() {
     fetch('/api/v1/authx/getuserinfo')
         .then(response => {
             if (!response.ok) {
-                throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/authx/getuserinfo ' + response.statusText);
+                throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/authx/getuserinfo::get ' + response.statusText);
             }
             return response.json();
         })
@@ -156,6 +156,8 @@ function checkAuth() {
             loginAvatar.appendChild(userAvatarLink);
             userAvatarLink.appendChild(userAvatarImg);
             userAvatarLink.appendChild(userNickname);
+
+            loadPageElements(userData);
         })
         .catch(error => {
             const loginLink = document.createElement("a");
@@ -171,6 +173,8 @@ function checkAuth() {
             loginAvatar.appendChild(loginLink);
             loginLink.appendChild(googleIcon);
             loginLink.appendChild(loginLinkText);
+
+            loadPageElements(null);
         });
 }
 
@@ -206,14 +210,137 @@ function drawIndex() {
     checkAuth();
 }
 
-/*
-"<div class=\"ui top attached menu\">\n" +
-"    <div class=\"ui item\">\n" +
-"      <a class=\"ui header\" href=\"/\"><i class=\"mountain icon\"></i></a>\n" +
-"    </div>\n" +
-"    <div class=\"right menu\">\n" +
-"      <div class=\"ui item\" id=\"menu-avatar-elem\">\n" +
-"        <a href=\"/oauth2/authorization/google\"><i class=\"google icon\"></i> login</a>\n" +
-"      </div>\n" +
-"    </div>\n" +
-"  </div>" */
+function loadIndexdata(userData) {
+    if(userData != null) {
+        const hostButtonHolder = document.getElementById("host-placeholder-elem");
+
+        const hostButton = document.createElement("button");
+        hostButton.classList.add("ui", "basic", "right", "floated", "icon", "button");
+        hostButton.id = "host-button-elem";
+
+        const buttonIcon = document.createElement("i");
+        buttonIcon.classList.add("plus", "icon");
+
+        hostButton.appendChild(buttonIcon);
+
+        hostButton
+            .addEventListener("click", function () {
+                fetch("/api/v1/matches", {method: "POST"})
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/matches::post ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    loadEventFeedData();
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        });
+
+    } else {
+        loadEventFeedData();
+    }
+}
+
+function loadEventFeedData() {
+    fetch('/api/v1/matches?page=0')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('[ERROR] rummyscore::index.html::fetch::/api/v1/matches::get ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const feed = document.getElementById("feed-elem");
+
+            data.content.forEach(function(eventData) {
+                const formattedEventDate = formatDate(eventData.startDate);
+
+                const event = document.createElement("div");
+                event.classList.add("event");
+
+                const eventLabel = document.createElement("div");
+                eventLabel.classList.add("label");
+
+                const eventLabelImage = document.createElement("img");
+                eventLabelImage.src = eventData.host.avatar;
+                eventLabelImage.alt = "user avatar";
+
+                const eventContent = document.createElement("div");
+                eventContent.classList.add("content");
+
+                const eventContentDate = document.createElement("div");
+                eventContentDate.classList.add("date");
+
+                const eventSummary = document.createElement("div");
+                eventSummary.classList.add("summary");
+
+                const eventHost = document.createElement("a");
+                eventHost.href = "/players/" + eventData.host.nickname;
+                eventHost.classList.add("user");
+
+                const eventId = document.createElement("a");
+                eventId.href = "/matches/" + event.id;
+
+                const eventMeta = document.createElement("div");
+                eventMeta.classList.add("meta");
+
+                const metaSpan = document.createElement("span");
+
+                const userIcon = document.createElement("i");
+                userIcon.classList.add("user", "icon");
+
+                event.appendChild(eventLabel);
+                eventLabel.appendChild(eventLabelImage);
+                event.appendChild(eventContent);
+                eventContent.appendChild(eventContentDate);
+                eventContentDate.appendChild(document.createTextNode(formattedEventDate));
+                eventContent.appendChild(eventSummary);
+                eventSummary.appendChild(eventHost);
+                eventSummary.appendChild(document.createTextNode(" is hosting "));
+                eventSummary.appendChild(eventId);
+                eventId.appendChild(document.createTextNode("#" + event.id.substring(0, 5)))
+                eventHost.appendChild(document.createTextNode("@" + event.host.nickname));
+                eventContentDate.appendChild(document.createTextNode(formattedEventDate));
+                eventContent.appendChild(eventMeta);
+                eventMeta.appendChild(metaSpan);
+                metaSpan.appendChild(userIcon);
+                metaSpan.appendChild(document.createTextNode(" " + eventData.scores.length));
+            });
+
+            if(data.scores.length === 0) {
+                document.getElementById("feed-elem").innerHTML = "<div class=\"event\">" +
+                    "<div class=\"label\">" +
+                    "<img src=\"https://api.dicebear.com/9.x/notionists-neutral/svg?seed=doom\" alt=\"user avatar\">" +
+                    "</div>" +
+                    "<div class=\"content\">" +
+                    "<div class=\"date\">" + formatDate(new Date()) + "</div>" +
+                    "<div class=\"summary\">" +
+                    "no events" +
+                    "</div>" +
+                    "</div>" +
+                    "</div>";
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        });
+}
+
+function formatDate(date) {
+    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const dateObj = new Date(date);
+
+    return dateObj.toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: false,
+        timeZone: userTimeZone
+    });
+}

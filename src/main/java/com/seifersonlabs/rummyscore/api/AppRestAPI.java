@@ -38,7 +38,7 @@ public class AppRestAPI {
 
     @GetMapping("/matches")
     public ResponseEntity<Page<Match>> getMatches(@AuthenticationPrincipal OAuth2User principal, @RequestParam int page) {
-        Pageable pageable = PageRequest.of(page, 5, Sort.by("startDate"));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("startDate"));
         Page<Match> matches = matchRepo.findAll(pageable);
 
         return ResponseEntity.ok(matches);
