@@ -17,8 +17,11 @@
   <div id="app-elem"></div>
 
   <script>
-      drawPage();
-      drawMatch();
+      setInterval(function() {
+          document.getElementById("app-elem").innerHTML = "";
+          drawPage();
+          drawMatch();
+      }, 5000);
 
       function loadPageElements(userData) {
           loadMatchData(userData);

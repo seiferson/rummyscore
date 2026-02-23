@@ -556,8 +556,9 @@ function loadMatchData(userData) {
                                 return response.json();
                             })
                             .then(scoreData => {
-                                loadMatchScores(matchId);
-                                document.getElementById("join-game-elem").remove();
+                                document.getElementById("app-elem").innerHTML = "";
+                                drawPage();
+                                drawMatch();
                             })
                             .catch(error => {
                                 console.log(error);
