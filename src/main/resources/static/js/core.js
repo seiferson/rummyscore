@@ -301,7 +301,6 @@ function loadEventFeedData() {
                 eventLabel.appendChild(eventLabelImage);
                 event.appendChild(eventContent);
                 eventContent.appendChild(eventContentDate);
-                eventContentDate.appendChild(document.createTextNode(formattedEventDate));
                 eventContent.appendChild(eventSummary);
                 eventSummary.appendChild(eventHost);
                 eventSummary.appendChild(document.createTextNode(" is hosting "));
@@ -477,6 +476,7 @@ function loadMatchData(userData) {
                     joinIcon.classList.add("sign", "in", "alternate", "icon");
 
                     joinButton.appendChild(joinIcon);
+                    joinButtonPlaceholder.appendChild(joinButton);
 
                     let joinRequest = {"matchId": matchId};
 
@@ -495,8 +495,8 @@ function loadMatchData(userData) {
                                 return response.json();
                             })
                             .then(scoreData => {
-                                loadMatchScores();
-                                document.getElementById("join-game-button").remove();
+                                loadMatchScores(matchId);
+                                document.getElementById("join-game-elem").remove();
                             })
                             .catch(error => {
                                 console.log(error);
@@ -588,7 +588,7 @@ function renderMatchScores(matchData) {
     });
 }
 
-function loadMatchScores() {
+function loadMatchScores(matchId) {
     fetch('/api/v1/matches/' + matchId)
         .then(response => {
             if (!response.ok) {
