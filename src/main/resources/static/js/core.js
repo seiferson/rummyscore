@@ -258,6 +258,7 @@ function loadEventFeedData() {
         })
         .then(data => {
             const feed = document.getElementById("feed-elem");
+            feed.innerHTML = "";
 
             data.content.forEach(function(eventData) {
                 const formattedEventDate = formatDate(eventData.startDate);
