@@ -336,6 +336,284 @@ function loadEventFeedData() {
         });
 }
 
+function drawMatch() {
+    const container = document.getElementById("container-elem");
+    const matchHeader = getMatchHeader();
+    const matchContent = getMatchContent();
+
+    container.appendChild(document.createElement("br"));
+    container.appendChild(document.createElement("br"));
+    container.appendChild(document.createElement("br"));
+    container.appendChild(matchHeader);
+    container.appendChild(document.createElement("br"));
+    container.appendChild(document.createElement("br"));
+    container.appendChild(matchContent);
+
+    checkAuth();
+}
+
+function getMatchHeader() {
+    const pageHeader = document.createElement("h1");
+    pageHeader.classList.add("ui", "header");
+
+    const headerSpan = document.createElement("span");
+    headerSpan.id = "page-header-elem";
+
+    const subHeaderSpan = document.createElement("span");
+    subHeaderSpan.classList.add("sub", "header");
+    subHeaderSpan.id = "page-subheader-elem";
+
+    pageHeader.appendChild(headerSpan);
+    pageHeader.appendChild(subHeaderSpan);
+
+    return pageHeader;
+}
+
+function getMatchContent() {
+    const grid = document.createElement("div");
+    grid.classList.add("ui", "stackable", "grid");
+
+    const row = document.createElement("div");
+    row.classList.add("row");
+
+    const enterScoreColumn = document.createElement("div");
+    enterScoreColumn.classList.add("five", "wide", "column");
+    enterScoreColumn.id = "enter-score-elem";
+
+    const displayScoresColumn = document.createElement("div");
+    displayScoresColumn.classList.add("eleven", "wide", "column");
+
+    const scoreboardHeader = document.createElement("h4");
+    scoreboardHeader.classList.add("ui", "center", "aligned", "icon", "header");
+
+    const scoreboardHeaderIcon = document.createElement("i");
+    scoreboardHeaderIcon.classList.add("circular", "dice", "icon");
+
+    const joinButtonPlaceholder = document.createElement("div");
+    joinButtonPlaceholder.id = "join-placeholder-elem";
+
+    const scoreboardTable = document.createElement("table");
+    scoreboardTable.classList.add("ui", "very", "basic", "celled", "fluid", "unstackable", "compact", "table");
+
+    const scoreboardTableHeader = document.createElement("thead");
+    const scoreboardTableHeaderRow = document.createElement("tr");
+    const scoreboardTableUser = document.createElement("th");
+
+    const scoreboardTableBody = document.createElement("tbody");
+    scoreboardTableBody.id = "scores-elem";
+
+    grid.appendChild(row);
+    row.appendChild(enterScoreColumn);
+    row.appendChild(displayScoresColumn);
+    displayScoresColumn.appendChild(scoreboardHeader);
+    scoreboardHeader.appendChild(scoreboardHeaderIcon);
+    scoreboardHeader.appendChild(document.createTextNode(" scoreboard"));
+    displayScoresColumn.appendChild(joinButtonPlaceholder);
+    displayScoresColumn.appendChild(document.createElement("br"));
+    displayScoresColumn.appendChild(document.createElement("br"));
+    displayScoresColumn.appendChild(scoreboardTable);
+    scoreboardTable.appendChild(scoreboardTableHeader);
+    scoreboardTable.appendChild(scoreboardTableBody);
+    scoreboardTableHeader.appendChild(scoreboardTableHeaderRow);
+    scoreboardTableUser.appendChild(document.createTextNode("player"));
+    scoreboardTableHeaderRow.appendChild(scoreboardTableUser);
+
+    for (let i = 1; i < 8; i++) {
+        let roundHeader = document.createElement("th");
+        roundHeader.classList.add("center", "aligned");
+        roundHeader.appendChild(document.createTextNode("r" + i));
+        scoreboardTableHeaderRow.appendChild(roundHeader);
+    }
+
+    return grid;
+}
+
+function loadMatchData(userData) {
+    let url = window.location.pathname;
+    let matchId = url.split("/").at(-1);
+
+    fetch('/api/v1/matches/' + matchId)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/matches/' + matchId + '::get ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(matchData => {
+            const pageHeaderPlaceholder = document.getElementById("page-header-elem");
+
+            const pageHeaderIcon = document.createElement("i");
+            pageHeaderIcon.classList.add("dice", "three", "icon");
+            pageHeaderPlaceholder.appendChild(pageHeaderIcon);
+            pageHeaderPlaceholder.appendChild(document.createTextNode("#" + matchId.substring(0,5)));
+
+            const pageSubheaderPlaceholder = document.getElementById("page-subheader-elem");
+
+            const userIcon = document.createElement("i");
+            userIcon.classList.add("user", "icon");
+
+            const userLink = document.createElement("a");
+            userLink.href = "/players/" + matchData.host.nickname;
+
+            const calendarIcon = document.createElement("i");
+            calendarIcon.classList.add("calendar", "alternate", "outline", "icon")
+            pageSubheaderPlaceholder.appendChild(userIcon);
+            pageSubheaderPlaceholder.appendChild(userLink);
+            userLink.appendChild(document.createTextNode("@" + matchData.host.nickname));
+            pageSubheaderPlaceholder.appendChild(calendarIcon);
+            pageSubheaderPlaceholder.appendChild(document.createTextNode(formatDate(matchData.startDate)));
+
+            renderMatchScores(matchData);
+
+            if(userData != null) {
+                let hasPlayerJoinedMatch = matchData.scores.some(score => score.player.nickname === userData.nickname);
+                if (!hasPlayerJoinedMatch) {
+                    const joinButtonPlaceholder = document.getElementById("join-placeholder-elem");
+                    const joinButton = document.createElement("button");
+                    joinButton.classList.add("ui", "basic", "right", "floated", "icon", "button");
+                    joinButton.id = "join-game-elem";
+
+                    const joinIcon = document.createElement("i");
+                    joinIcon.classList.add("sign", "in", "alternate", "icon");
+
+                    joinButton.appendChild(joinIcon);
+
+                    let joinRequest = {"matchId": matchId};
+
+                    joinButton.addEventListener("click", function () {
+                        fetch("/api/v1/scores", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(joinRequest)
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/scores::post ' + response.statusText);
+                                }
+                                return response.json();
+                            })
+                            .then(scoreData => {
+                                loadMatchScores();
+                                document.getElementById("join-game-button").remove();
+                            })
+                            .catch(error => {
+                                console.log(error);
+                            });
+                        });
+                } else if(matchData.endDate === null) {
+                    let playerCount = matchData.scores.length;
+                    document.getElementById("enter-score-elem").innerHTML =
+                        "<div class=\"ui centered card\">\n" +
+                        "<div class=\"content\">\n" +
+                        "<div class=\"header\"><i class=\"dice " + " icon\"></i>" + "</div>\n" +
+                        "<div class=\"meta\">\n" +
+                        "<span><i class=\"circle check outline icon\"></i> " + "?/" + playerCount + "</span>\n" +
+                        "</div>\n" +
+                        "<br />\n" +
+                        "<div class=\"ui label\"><i class=\"dice two icon\"></i> A♥ A♦ A♣</div>\n" +
+                        "<div class=\"ui label\"><i class=\"dice one icon\"></i> 8♥ 9♥ 10♥ J♥</div>\n" +
+                        "<br />\n" +
+                        "<br />\n" +
+                        "<p>\n" +
+                        "<form class=\"ui form\">\n" +
+                        "<div class=\"fluid field\">\n" +
+                        "<label>your score</label>\n" +
+                        "<input type=\"text\" name=\"score\" placeholder=\"123\" />\n" +
+                        "</div>\n" +
+                        "<button class=\"ui right floated basic icon button\"><i class=\"arrow alternate circle up outline icon\"></i></button>\n" +
+                        "</form>\n" +
+                        "</p>\n" +
+                        "</div>\n" +
+                        "</div>";
+                }
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        });
+}
+
+function renderMatchScores(matchData) {
+    const scoreboardTableBody = document.getElementById("scores-elem");
+    scoreboardTableBody.innerHTML = "";
+    matchData.scores.forEach(function(score){
+        let scoreRow = document.createElement("tr");
+
+        let scorePlayer = document.createElement("td");
+        let scorePlayerLink = document.createElement("a");
+        scorePlayerLink.href = "/players/" + score.player.nickname;
+        scorePlayerLink.appendChild(document.createTextNode("@" + score.player.nickname));
+        scorePlayer.appendChild(scorePlayerLink);
+
+        let round1 = document.createElement("td");
+        round1.classList.add("center", "aligned");
+        round1.appendChild(getScoreContent(score.round1Score));
+
+        let round2 = document.createElement("td");
+        round2.classList.add("center", "aligned");
+        round2.appendChild(getScoreContent(score.round2Score));
+
+        let round3 = document.createElement("td");
+        round3.classList.add("center", "aligned");
+        round3.appendChild(getScoreContent(score.round3Score));
+
+        let round4 = document.createElement("td");
+        round4.classList.add("center", "aligned");
+        round4.appendChild(getScoreContent(score.round4Score));
+
+        let round5 = document.createElement("td");
+        round5.classList.add("center", "aligned");
+        round5.appendChild(getScoreContent(score.round5Score));
+
+        let round6 = document.createElement("td");
+        round6.classList.add("center", "aligned");
+        round6.appendChild(getScoreContent(score.round6Score));
+
+        let round7 = document.createElement("td");
+        round7.classList.add("center", "aligned");
+        round7.appendChild(getScoreContent(score.round7Score));
+
+        scoreRow.appendChild(scorePlayer);
+        scoreRow.appendChild(round1);
+        scoreRow.appendChild(round2);
+        scoreRow.appendChild(round3);
+        scoreRow.appendChild(round4);
+        scoreRow.appendChild(round5);
+        scoreRow.appendChild(round6);
+        scoreRow.appendChild(round7);
+
+        scoreboardTableBody.appendChild(scoreRow);
+    });
+}
+
+function loadMatchScores() {
+    fetch('/api/v1/matches/' + matchId)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/matches/' + matchId + '::get ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(matchData => {
+            renderMatchScores(matchData);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+}
+
+function getScoreContent(score) {
+    const trophyIcon = document.createElement("i");
+    trophyIcon.classList.add("trophy", "icon");
+
+    const empty = document.createTextNode("-");
+    const data = document.createTextNode(score);
+
+    return score === null ? empty : score === 0 ? trophyIcon : data;
+}
+
 function formatDate(date) {
     const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const dateObj = new Date(date);
