@@ -467,6 +467,17 @@ function getNumberText(number) {
     }
 }
 
+function getPlayerCompletion(scores, currentRound){
+    let total = 0;
+    scores.forEach(score => {
+        if(score[`round${currentRound}Score`] !== null) {
+            total += 1;
+        }
+    });
+
+    return total;
+}
+
 function loadMatchData(userData) {
     const url = window.location.pathname;
     const matchId = url.split("/").at(-1);
@@ -607,7 +618,11 @@ function loadMatchData(userData) {
                     cardContent.appendChild(contentMeta);
                     contentMeta.appendChild(metaSpan);
                     metaSpan.appendChild(playerCountIcon);
-                    metaSpan.appendChild(document.createTextNode("?/" + playerCount));
+                    metaSpan.appendChild(
+                        document.createTextNode(
+                            getPlayerCompletion(matchData.scores, matchData.currentRound) + "/" + playerCount
+                        )
+                    );
                     cardContent.appendChild(document.createElement("br"));
 
                     if(sets > 0) {
