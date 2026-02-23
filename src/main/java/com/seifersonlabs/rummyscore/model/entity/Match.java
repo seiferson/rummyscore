@@ -83,26 +83,31 @@ public class Match {
     public int getCurrentRound() {
         int currentRound = 7;
 
-        for (Score score : scores) {
-            int playerRound = 7;
+        if (scores != null) {
 
-            if(score.getRound1Score() == null) {
-                playerRound = 1;
-            } else if(score.getRound2Score() == null) {
-                playerRound = 2;
-            } else if(score.getRound3Score() == null) {
-                playerRound = 3;
-            } else if(score.getRound4Score() == null) {
-                playerRound = 4;
-            } else if(score.getRound5Score() == null) {
-                playerRound = 5;
-            } else if(score.getRound6Score() == null) {
-                playerRound = 6;
-            }
+            for (Score score : scores) {
+                int playerRound = 7;
 
-            if(playerRound < currentRound) {
-                currentRound = playerRound;
+                if (score.getRound1Score() == null) {
+                    playerRound = 1;
+                } else if (score.getRound2Score() == null) {
+                    playerRound = 2;
+                } else if (score.getRound3Score() == null) {
+                    playerRound = 3;
+                } else if (score.getRound4Score() == null) {
+                    playerRound = 4;
+                } else if (score.getRound5Score() == null) {
+                    playerRound = 5;
+                } else if (score.getRound6Score() == null) {
+                    playerRound = 6;
+                }
+
+                if (playerRound < currentRound) {
+                    currentRound = playerRound;
+                }
             }
+        } else {
+            currentRound = 1;
         }
 
         return currentRound;
