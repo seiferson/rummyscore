@@ -478,6 +478,16 @@ function getPlayerCompletion(scores, currentRound){
     return total;
 }
 
+function getUserScoreForCurrentRound(matchData, userData) {
+    matchData.scores.forEach(score => {
+        if(score.player.nickname === userData.nickname){
+            return score[`round${matchData.currentRound}Score`];
+        }
+    });
+
+    return null;
+}
+
 function loadMatchData(userData) {
     const url = window.location.pathname;
     const matchId = url.split("/").at(-1);
@@ -509,7 +519,7 @@ function loadMatchData(userData) {
             calendarIcon.classList.add("calendar", "alternate", "outline", "icon")
             pageSubheaderPlaceholder.appendChild(userIcon);
             pageSubheaderPlaceholder.appendChild(userLink);
-            userLink.appendChild(document.createTextNode("@" + matchData.host.nickname));
+            userLink.appendChild(document.createTextNode("@" + matchData.host.nickname + " "));
             pageSubheaderPlaceholder.appendChild(calendarIcon);
             pageSubheaderPlaceholder.appendChild(document.createTextNode(formatDate(matchData.startDate)));
 
@@ -553,7 +563,7 @@ function loadMatchData(userData) {
                                 console.log(error);
                             });
                         });
-                } else if(matchData.endDate === null) {
+                } else if(matchData.endDate === null && getUserScoreForCurrentRound(matchData, userData) === null) {
                     const playerCount = matchData.scores.length;
                     const enterScorePlaceholder = document.getElementById("enter-score-elem");
 
