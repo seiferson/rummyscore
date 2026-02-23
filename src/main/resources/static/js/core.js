@@ -504,29 +504,84 @@ function loadMatchData(userData) {
                         });
                 } else if(matchData.endDate === null) {
                     const playerCount = matchData.scores.length;
-                    document.getElementById("enter-score-elem").innerHTML =
-                        "<div class=\"ui centered card\">\n" +
-                        "<div class=\"content\">\n" +
-                        "<div class=\"header\"><i class=\"dice " + " icon\"></i>" + "</div>\n" +
-                        "<div class=\"meta\">\n" +
-                        "<span><i class=\"circle check outline icon\"></i> " + "?/" + playerCount + "</span>\n" +
-                        "</div>\n" +
-                        "<br />\n" +
-                        "<div class=\"ui label\"><i class=\"dice two icon\"></i> A♥ A♦ A♣</div>\n" +
-                        "<div class=\"ui label\"><i class=\"dice one icon\"></i> 8♥ 9♥ 10♥ J♥</div>\n" +
-                        "<br />\n" +
-                        "<br />\n" +
-                        "<p>\n" +
-                        "<form class=\"ui form\">\n" +
-                        "<div class=\"fluid field\">\n" +
-                        "<label>your score</label>\n" +
-                        "<input type=\"text\" name=\"score\" placeholder=\"123\" />\n" +
-                        "</div>\n" +
-                        "<button class=\"ui right floated basic icon button\"><i class=\"arrow alternate circle up outline icon\"></i></button>\n" +
-                        "</form>\n" +
-                        "</p>\n" +
-                        "</div>\n" +
-                        "</div>";
+                    const enterScorePlaceholder = document.getElementById("enter-score-elem");
+
+                    const card = document.createElement("div");
+                    card.classList.add("ui", "centered", "card");
+
+                    const cardContent = document.createElement("div");
+                    cardContent.classList.add("content");
+
+                    const contentHeader = document.createElement("div");
+                    contentHeader.classList.add("header");
+
+                    const headerIcon = document.createElement("i");
+                    headerIcon.classList.add("dice", "icon");
+
+                    const contentMeta = document.createElement("div");
+                    contentMeta.classList.add("meta");
+
+                    const metaSpan = document.createElement("span");
+
+                    const playerCountIcon = document.createElement("i");
+                    playerCountIcon.classList.add("circle", "check", "outline", "icon");
+
+                    const contract1Label = document.createElement("div");
+                    contract1Label.classList.add("ui", "label");
+
+                    const contract1Icon = document.createElement("i");
+                    contract1Icon.classList.add("dice", "two", "icon");
+
+                    const contract2Label = document.createElement("div");
+                    contract2Label.classList.add("ui", "label");
+
+                    const contract2Icon = document.createElement("i");
+                    contract2Icon.classList.add("dice", "one", "icon");
+
+                    const p = document.createElement("p");
+                    const form = document.createElement("form");
+                    form.classList.add("ui", "form");
+
+                    const field = document.createElement("div");
+                    field.classList.add("fluid", "field");
+
+                    const fieldLabel = document.createElement("label");
+                    const fieldInput = document.createElement("input");
+                    fieldInput.type = "text";
+                    fieldInput.name = "score";
+                    fieldInput.placeholder = "123";
+
+                    const submitButton = document.createElement("button");
+                    submitButton.classList.add("ui", "right", "floated", "basic", "icon", "button");
+
+                    const submitIcon = document.createElement("i");
+                    submitIcon.classList.add("arrow", "alternate", "circle", "up", "outline", "icon");
+
+                    enterScorePlaceholder.appendChild(card);
+                    card.appendChild(cardContent);
+                    cardContent.appendChild(contentHeader);
+                    contentHeader.appendChild(headerIcon);
+                    cardContent.appendChild(contentMeta);
+                    contentMeta.appendChild(metaSpan);
+                    metaSpan.appendChild(playerCountIcon);
+                    metaSpan.appendChild(document.createTextNode("?/" + playerCount));
+                    cardContent.appendChild(document.createElement("br"));
+                    contract1Label.appendChild(contract1Icon);
+                    contract1Label.appendChild(document.createTextNode(" A♥ A♦ A♣"));
+                    cardContent.appendChild(contract1Label);
+                    contract2Label.appendChild(contract2Icon);
+                    contract2Label.appendChild(document.createTextNode(" 8♥ 9♥ 10♥ J♥"));
+                    cardContent.appendChild(contract2Label);
+                    cardContent.appendChild(document.createElement("br"));
+                    cardContent.appendChild(document.createElement("br"));
+                    cardContent.appendChild(p);
+                    p.appendChild(form);
+                    form.appendChild(field);
+                    fieldLabel.appendChild(document.createTextNode("your score"));
+                    field.appendChild(fieldLabel);
+                    field.appendChild(fieldInput);
+                    submitButton.appendChild(submitIcon);
+                    form.appendChild(submitButton);
                 }
             }
         })
