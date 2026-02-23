@@ -200,10 +200,7 @@ function drawIndex() {
 
     container.appendChild(document.createElement("br"));
     container.appendChild(document.createElement("br"));
-    container.appendChild(document.createElement("br"));
     container.appendChild(indexHeader);
-    container.appendChild(document.createElement("br"));
-    container.appendChild(document.createElement("br"));
     container.appendChild(document.createElement("br"));
     container.appendChild(indexContent);
 
@@ -558,6 +555,7 @@ function loadMatchData(userData) {
                     card.appendChild(cardContent);
                     cardContent.appendChild(contentHeader);
                     contentHeader.appendChild(headerIcon);
+                    contentHeader.appendChild(document.createTextNode(" round " + matchData.currentRound));
                     cardContent.appendChild(contentMeta);
                     contentMeta.appendChild(metaSpan);
                     metaSpan.appendChild(playerCountIcon);

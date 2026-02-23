@@ -1,6 +1,5 @@
 package com.seifersonlabs.rummyscore.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -78,5 +77,34 @@ public class Match {
 
     public void setScores(List<Score> scores) {
         this.scores = scores;
+    }
+
+    @Transient
+    public int getCurrentRound() {
+        int currentRound = 7;
+
+        for (Score score : scores) {
+            int playerRound = 7;
+
+            if(score.getRound1Score() == null) {
+                playerRound = 1;
+            } else if(score.getRound2Score() == null) {
+                playerRound = 2;
+            } else if(score.getRound3Score() == null) {
+                playerRound = 3;
+            } else if(score.getRound4Score() == null) {
+                playerRound = 4;
+            } else if(score.getRound5Score() == null) {
+                playerRound = 5;
+            } else if(score.getRound6Score() == null) {
+                playerRound = 6;
+            }
+
+            if(playerRound < currentRound) {
+                currentRound = playerRound;
+            }
+        }
+
+        return currentRound;
     }
 }
