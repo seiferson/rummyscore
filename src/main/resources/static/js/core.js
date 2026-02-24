@@ -625,8 +625,7 @@ function loadMatchData(userData) {
                                 return response.json();
                             })
                             .then(scoreData => {
-                                loadMatchScores(matchId);
-                                loadRegisterScoreCard(matchData, userData);
+                                loadMatchScores(matchId, userData);
                                 document.getElementById("join-game-elem").remove();
                             })
                             .catch(error => {
@@ -667,7 +666,7 @@ function renderMatchScores(matchData) {
     });
 }
 
-function loadMatchScores(matchId) {
+function loadMatchScores(matchId, userData) {
     fetch('/api/v1/matches/' + matchId)
         .then(response => {
             if (!response.ok) {
@@ -677,6 +676,7 @@ function loadMatchScores(matchId) {
         })
         .then(matchData => {
             renderMatchScores(matchData);
+            loadRegisterScoreCard(matchData, userData);
         })
         .catch(error => {
             console.log(error);
