@@ -516,7 +516,7 @@ function loadRegisterScoreCard(matchData, userData) {
         field.classList.add("fluid", "field");
 
         const fieldLabel = document.createElement("label");
-        fieldLabel.for = "score-elem";
+        fieldLabel.htmlFor = "score-elem";
 
         const fieldInput = document.createElement("input");
         fieldInput.type = "text";
