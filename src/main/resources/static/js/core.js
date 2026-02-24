@@ -529,6 +529,27 @@ function loadRegisterScoreCard(matchData, userData) {
 
         submitButton.addEventListener("click", function () {
             capturedScore = document.getElementById("score-elem").value;
+            const playerScore = matchData.scores.find(s => s.player.nickname === userData.nickname);
+            const patchRequest = {"score": playerScore};
+
+            fetch(SCORE_DATA_URL + "/" + playerScore.id , {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(patchRequest)})
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("[ERROR] rummyscore::fetch::" + SCORE_DATA_URL + "/" + playerScore.id + "::patch " + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(scoreData => {
+                    loadMatchScores(matchData.id, userData);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
 
 
         });
