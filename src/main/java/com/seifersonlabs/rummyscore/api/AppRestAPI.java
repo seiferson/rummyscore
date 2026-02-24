@@ -103,7 +103,7 @@ public class AppRestAPI {
         if (host.isPresent() && score.isPresent()) {
             Score scoreFound = score.get();
             int currentRound = scoreFound.getMatch().getCurrentRound();
-            int userScore = Integer.parseInt((String)data.get("score"));
+            int userScore = Integer.parseInt((String)(data.get("score")));
 
             switch (currentRound) {
                 case 1:

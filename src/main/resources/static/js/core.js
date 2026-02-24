@@ -526,6 +526,7 @@ function loadRegisterScoreCard(matchData, userData) {
 
         const submitButton = document.createElement("button");
         submitButton.classList.add("ui", "right", "floated", "basic", "icon", "button");
+        submitButton.type = "button";
 
         submitButton.addEventListener("click", function () {
             capturedScore = document.getElementById("score-elem").value;
