@@ -1,4 +1,10 @@
 const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+const CONTRACT_SETS = [null, 2, 1, 0, 3, 2, 1, 0];
+const CONTRACT_RUNS = [null, 0, 1, 2, 0, 1, 2, 3];
+
+function getPlayerCompletion(scores, round) {
+    return scores.filter(s => s[`round${round}Score`] !== null).length;
+}
 
 function getHeaderFragment() {
     const parentMenu = document.createElement("div");
@@ -421,42 +427,6 @@ function getMatchContent() {
     return grid;
 }
 
-function getContractSets(round) {
-    if(round === 1) {
-        return 2;
-    } else if(round === 2) {
-        return 1;
-    } else if(round === 3) {
-        return 0;
-    } else if(round === 4) {
-        return 3;
-    } else if(round === 5) {
-        return 2;
-    } else if(round === 6) {
-        return 1;
-    } else if(round === 7) {
-        return 0;
-    }
-}
-
-function getContractRuns(round) {
-    if(round === 1) {
-        return 0;
-    } else if(round === 2) {
-        return 1;
-    } else if(round === 3) {
-        return 2;
-    } else if(round === 4) {
-        return 0;
-    } else if(round === 5) {
-        return 1;
-    } else if(round === 6) {
-        return 2;
-    } else if(round === 7) {
-        return 3;
-    }
-}
-
 function getNumberText(number) {
     if(number === 1) {
         return "one";
@@ -467,25 +437,9 @@ function getNumberText(number) {
     }
 }
 
-function getPlayerCompletion(scores, currentRound){
-    let total = 0;
-    scores.forEach(score => {
-        if(score[`round${currentRound}Score`] !== null) {
-            total += 1;
-        }
-    });
-
-    return total;
-}
-
 function getUserScoreForCurrentRound(matchData, userData) {
-    matchData.scores.forEach(score => {
-        if(score.player.nickname === userData.nickname){
-            return score[`round${matchData.currentRound}Score`];
-        }
-    });
-
-    return null;
+    const playerScore = matchData.scores.find(s => s.player.nickname === userData.nickname);
+    return playerScore ? playerScore[`round${matchData.currentRound}Score`] : null;
 }
 
 function loadRegisterScoreCard(matchData, userData) {
@@ -513,14 +467,14 @@ function loadRegisterScoreCard(matchData, userData) {
         const playerCountIcon = document.createElement("i");
         playerCountIcon.classList.add("circle", "check", "outline", "icon");
 
-        const sets = getContractSets(matchData.currentRound);
+        const sets = CONTRACT_SETS[matchData.currentRound];
         const setsLabel = document.createElement("div");
         setsLabel.classList.add("ui", "label");
 
         const setsIcon = document.createElement("i");
         setsIcon.classList.add("dice", getNumberText(sets), "icon");
 
-        const runs = getContractRuns(matchData.currentRound);
+        const runs = CONTRACT_RUNS[matchData.currentRound];
         const runsLabel = document.createElement("div");
         runsLabel.classList.add("ui", "label");
 
