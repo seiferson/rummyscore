@@ -531,7 +531,7 @@ function loadRegisterScoreCard(matchData, userData) {
         submitButton.addEventListener("click", function () {
             capturedScore = document.getElementById("score-elem").value;
             const playerScore = matchData.scores.find(s => s.player.nickname === userData.nickname);
-            const patchRequest = {"score": playerScore};
+            const patchRequest = {"score": capturedScore};
 
             fetch(SCORE_DATA_URL + "/" + playerScore.id , {
                 method: "PATCH",
