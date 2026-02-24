@@ -1,6 +1,16 @@
 const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 const CONTRACT_SETS = [null, 2, 1, 0, 3, 2, 1, 0];
 const CONTRACT_RUNS = [null, 0, 1, 2, 0, 1, 2, 3];
+const USER_DATA_URL = "/api/v1/authx/getuserinfo";
+const PLAYERS_URL = "/players/";
+const PROJECT_URL = "https://github.com/seiferson/rummyscore";
+const GOOGLE_OAUTH2_URL = "/oauth2/authorization/google";
+const MATCH_DATA_URL = "/api/v1/matches";
+const MATCHES_URL = "/matches/";
+const ANON_AVATAR_URL = "https://api.dicebear.com/9.x/notionists-neutral/svg?seed=doom";
+const SCORE_DATA_URL = "/api/v1/scores";
+const PAGE_SIZE = "?page=0";
+
 
 function getPlayerCompletion(scores, round) {
     return scores.filter(s => s[`round${round}Score`] !== null).length;
@@ -57,7 +67,7 @@ function getFooterFragment() {
 
     const githubLink = document.createElement("a")
     githubLink.classList.add("ui", "label");
-    githubLink.href = "https://github.com/seiferson/rummyscore";
+    githubLink.href = PROJECT_URL;
 
     const githubIcon = document.createElement("i");
     githubIcon.classList.add("github", "icon");
@@ -140,10 +150,10 @@ function getIndexContent() {
 }
 
 function checkAuthAndLoadPage() {
-    fetch('/api/v1/authx/getuserinfo')
+    fetch(USER_DATA_URL)
         .then(response => {
             if (!response.ok) {
-                throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/authx/getuserinfo::get ' + response.statusText);
+                throw new Error("[ERROR] rummyscore::fetch::" + USER_DATA_URL + "::get " + response.statusText);
             }
             return response.json();
         })
@@ -151,7 +161,7 @@ function checkAuthAndLoadPage() {
             const loginAvatar = document.getElementById('login-avatar-elem');
 
             const userAvatarLink = document.createElement("a");
-            userAvatarLink.href = "/players/" + userData.nickname;
+            userAvatarLink.href = PLAYERS_URL + userData.nickname;
 
             const userAvatarImg = document.createElement("img");
             userAvatarImg.classList.add("ui", "avatar", "image");
@@ -167,7 +177,7 @@ function checkAuthAndLoadPage() {
         })
         .catch(error => {
             const loginLink = document.createElement("a");
-            loginLink.href="/oauth2/authorization/google";
+            loginLink.href= GOOGLE_OAUTH2_URL;
 
             const googleIcon = document.createElement("i");
             googleIcon.classList.add("google", "icon");
@@ -229,10 +239,10 @@ function loadIndexData(userData) {
 
         hostButton
             .addEventListener("click", function () {
-                fetch("/api/v1/matches", {method: "POST"})
+                fetch(MATCH_DATA_URL, {method: "POST"})
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/matches::post ' + response.statusText);
+                        throw new Error("[ERROR] rummyscore::fetch::" + MATCH_DATA_URL +"::post " + response.statusText);
                     }
                     return response.json();
                 })
@@ -249,10 +259,10 @@ function loadIndexData(userData) {
 }
 
 function loadEventFeedData() {
-    fetch('/api/v1/matches?page=0')
+    fetch(MATCH_DATA_URL + PAGE_SIZE)
         .then(response => {
             if (!response.ok) {
-                throw new Error('[ERROR] rummyscore::index.html::fetch::/api/v1/matches::get ' + response.statusText);
+                throw new Error("[ERROR] rummyscore::fetch::" + MATCH_DATA_URL + "::get " + response.statusText);
             }
             return response.json();
         })
@@ -283,11 +293,11 @@ function loadEventFeedData() {
                 eventSummary.classList.add("summary");
 
                 const eventHost = document.createElement("a");
-                eventHost.href = "/players/" + eventData.host.nickname;
+                eventHost.href = PLAYERS_URL + eventData.host.nickname;
                 eventHost.classList.add("user");
 
                 const eventId = document.createElement("a");
-                eventId.href = "/matches/" + eventData.id;
+                eventId.href = MATCHES_URL + eventData.id;
 
                 const eventMeta = document.createElement("div");
                 eventMeta.classList.add("meta");
@@ -325,7 +335,7 @@ function loadEventFeedData() {
                 eventLabel.classList.add("label");
 
                 const labelImage = document.createElement("img");
-                labelImage.src = "https://api.dicebear.com/9.x/notionists-neutral/svg?seed=doom";
+                labelImage.src = ANON_AVATAR_URL;
                 labelImage.alt = "user avatar";
 
                 const eventContent = document.createElement("div");
@@ -561,10 +571,10 @@ function loadMatchData(userData) {
     const url = window.location.pathname;
     const matchId = url.split("/").at(-1);
 
-    fetch('/api/v1/matches/' + matchId)
+    fetch(MATCH_DATA_URL + matchId)
         .then(response => {
             if (!response.ok) {
-                throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/matches/' + matchId + '::get ' + response.statusText);
+                throw new Error("[ERROR] rummyscore::fetch::" + MATCH_DATA_URL + "/" + matchId + "::get " + response.statusText);
             }
             return response.json();
         })
@@ -582,7 +592,7 @@ function loadMatchData(userData) {
             userIcon.classList.add("user", "icon");
 
             const userLink = document.createElement("a");
-            userLink.href = "/players/" + matchData.host.nickname;
+            userLink.href = PLAYERS_URL + matchData.host.nickname;
 
             const calendarIcon = document.createElement("i");
             calendarIcon.classList.add("calendar", "alternate", "outline", "icon")
@@ -611,7 +621,7 @@ function loadMatchData(userData) {
                     const joinRequest = {"matchId": matchId};
 
                     joinButton.addEventListener("click", function () {
-                        fetch("/api/v1/scores", {
+                        fetch(SCORE_DATA_URL, {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json"
@@ -620,7 +630,7 @@ function loadMatchData(userData) {
                         })
                             .then(response => {
                                 if (!response.ok) {
-                                    throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/scores::post ' + response.statusText);
+                                    throw new Error("[ERROR] rummyscore::fetch::" + SCORE_DATA_URL + "::post " + response.statusText);
                                 }
                                 return response.json();
                             })
@@ -650,7 +660,7 @@ function renderMatchScores(matchData) {
 
         const scorePlayer = document.createElement("td");
         const scorePlayerLink = document.createElement("a");
-        scorePlayerLink.href = "/players/" + score.player.nickname;
+        scorePlayerLink.href = PLAYERS_URL + score.player.nickname;
         scorePlayerLink.appendChild(document.createTextNode("@" + score.player.nickname));
         scorePlayer.appendChild(scorePlayerLink);
         scoreRow.appendChild(scorePlayer);
@@ -667,10 +677,10 @@ function renderMatchScores(matchData) {
 }
 
 function loadMatchScores(matchId, userData) {
-    fetch('/api/v1/matches/' + matchId)
+    fetch(MATCH_DATA_URL + matchId)
         .then(response => {
             if (!response.ok) {
-                throw new Error('[ERROR] rummyscore::match.html::fetch::/api/v1/matches/' + matchId + '::get ' + response.statusText);
+                throw new Error("[ERROR] rummyscore::fetch::" + MATCH_DATA_URL + "/" + matchId + "::get " + response.statusText);
             }
             return response.json();
         })
