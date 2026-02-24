@@ -516,10 +516,13 @@ function loadRegisterScoreCard(matchData, userData) {
         field.classList.add("fluid", "field");
 
         const fieldLabel = document.createElement("label");
+        fieldLabel.for = "score-elem";
+
         const fieldInput = document.createElement("input");
         fieldInput.type = "text";
         fieldInput.name = "score";
         fieldInput.placeholder = "123";
+        fieldInput.id = "score-elem";
 
         const submitButton = document.createElement("button");
         submitButton.classList.add("ui", "right", "floated", "basic", "icon", "button");
@@ -677,7 +680,7 @@ function renderMatchScores(matchData) {
 }
 
 function loadMatchScores(matchId, userData) {
-    fetch(MATCH_DATA_URL + matchId)
+    fetch(MATCH_DATA_URL + "/" + matchId)
         .then(response => {
             if (!response.ok) {
                 throw new Error("[ERROR] rummyscore::fetch::" + MATCH_DATA_URL + "/" + matchId + "::get " + response.statusText);
