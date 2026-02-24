@@ -95,6 +95,46 @@ public class AppRestAPI {
         }
     }
 
+    @PatchMapping("/scores/{scoreId}")
+    public ResponseEntity<Score> submitScore(@AuthenticationPrincipal OAuth2User principal, @RequestBody Map<String, Object> data,  @PathVariable String scoreId) {
+        Optional<Player> host = playerRepo.findByEmail(principal.getAttribute("email"));
+        Optional<Score> score = scoreRepo.findById(UUID.fromString(scoreId));
+
+        if (host.isPresent() && score.isPresent()) {
+            Score scoreFound = score.get();
+            int currentRound = scoreFound.getMatch().getCurrentRound();
+            int userScore = Integer.parseInt((String)data.get("score"));
+
+            switch (currentRound) {
+                case 1:
+                    scoreFound.setRound1Score(userScore);
+                    break;
+                case 2:
+                    scoreFound.setRound2Score(userScore);
+                    break;
+                case 3:
+                    scoreFound.setRound3Score(userScore);
+                    break;
+                case 4:
+                    scoreFound.setRound4Score(userScore);
+                    break;
+                case 5:
+                    scoreFound.setRound5Score(userScore);
+                    break;
+                case 6:
+                    scoreFound.setRound6Score(userScore);
+                    break;
+                case 7:
+                    scoreFound.setRound7Score(userScore);
+            }
+
+            scoreFound = scoreRepo.save(scoreFound);
+            return ResponseEntity.ok(scoreFound);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     @GetMapping("/authx/getuserinfo")
     public ResponseEntity<Player> getUserInfo(@AuthenticationPrincipal OAuth2User principal) {
         if(principal != null) {

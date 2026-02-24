@@ -527,6 +527,12 @@ function loadRegisterScoreCard(matchData, userData) {
         const submitButton = document.createElement("button");
         submitButton.classList.add("ui", "right", "floated", "basic", "icon", "button");
 
+        submitButton.addEventListener("click", function () {
+            capturedScore = document.getElementById("score-elem").value;
+
+
+        });
+
         const submitIcon = document.createElement("i");
         submitIcon.classList.add("arrow", "alternate", "circle", "up", "outline", "icon");
 
@@ -574,7 +580,7 @@ function loadMatchData(userData) {
     const url = window.location.pathname;
     const matchId = url.split("/").at(-1);
 
-    fetch(MATCH_DATA_URL + matchId)
+    fetch(MATCH_DATA_URL + "/" + matchId)
         .then(response => {
             if (!response.ok) {
                 throw new Error("[ERROR] rummyscore::fetch::" + MATCH_DATA_URL + "/" + matchId + "::get " + response.statusText);
