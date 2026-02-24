@@ -473,6 +473,7 @@ function loadRegisterScoreCard(matchData, userData) {
     if(matchData.endDate === null && getUserScoreForCurrentRound(matchData, userData) === null) {
         const playerCount = matchData.scores.length;
         const enterScorePlaceholder = document.getElementById("enter-score-elem");
+        enterScorePlaceholder.innerHTML = "";
 
         const card = document.createElement("div");
         card.classList.add("ui", "centered", "card");
