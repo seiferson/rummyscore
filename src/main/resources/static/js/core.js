@@ -317,17 +317,34 @@ function loadEventFeedData() {
             });
 
             if(data.content.length === 0) {
-                document.getElementById("feed-elem").innerHTML = "<div class=\"event\">" +
-                    "<div class=\"label\">" +
-                    "<img src=\"https://api.dicebear.com/9.x/notionists-neutral/svg?seed=doom\" alt=\"user avatar\">" +
-                    "</div>" +
-                    "<div class=\"content\">" +
-                    "<div class=\"date\">" + formatDate(new Date()) + "</div>" +
-                    "<div class=\"summary\">" +
-                    "no events" +
-                    "</div>" +
-                    "</div>" +
-                    "</div>";
+                const feed = document.getElementById("feed-elem");
+                const event = document.createElement("div");
+                event.classList.add("event");
+
+                const eventLabel = document.createElement("div");
+                eventLabel.classList.add("label");
+
+                const labelImage = document.createElement("img");
+                labelImage.src = "https://api.dicebear.com/9.x/notionists-neutral/svg?seed=doom";
+                labelImage.alt = "user avatar";
+
+                const eventContent = document.createElement("div");
+                eventContent.classList.add("content");
+
+                const contentDate = document.createElement("div");
+                contentDate.classList.add("date");
+
+                const contentSummary = document.createElement("div");
+                contentSummary.classList.add("summary");
+
+                feed.appendChild(event);
+                event.appendChild(eventLabel);
+                eventLabel.appendChild(labelImage);
+                event.appendChild(eventContent);
+                eventContent.appendChild(contentDate);
+                contentDate.appendChild(document.createTextNode(formatDate(new Date())));
+                eventContent.appendChild(contentSummary);
+                contentSummary.appendChild(document.createTextNode("no events"));
             }
         })
         .catch(error => {
